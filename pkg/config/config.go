@@ -1,0 +1,179 @@
+package config
+
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+
+	"github.com/pkg/errors"
+)
+
+// Config represents the application configuration.
+type Config struct {
+	AnthropicAPIKey   string        `json:"anthropic_api_key"`
+	SummariesLocation string        `json:"summaries_location"`
+	Pandoc            PandocConfig  `json:"pandoc"`
+	Defaults          DefaultConfig `json:"defaults"`
+}
+
+// PandocConfig holds pandoc-related configuration.
+type PandocConfig struct {
+	TemplatePath string `json:"template_path"`
+	ClassFile    string `json:"class_file"`
+}
+
+// DefaultConfig holds default values for commands.
+type DefaultConfig struct {
+	OutputDir string `json:"output_dir"`
+}
+
+// Load reads configuration from file with environment variable overrides.
+func Load(configPath string) (cfg Config, err error) {
+	// Determine config file location
+	path := configPath
+	if path == "" {
+		var homeDir string
+		homeDir, err = os.UserHomeDir()
+		if err != nil {
+			err = errors.Wrap(err, "failed to get user home directory")
+			return cfg, err
+		}
+		path = filepath.Join(homeDir, ".resume-tailor", "config.json")
+	}
+
+	// Read config file
+	var data []byte
+	data, err = os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			err = errors.Errorf("config file not found: %s (run 'resume-tailor init' to create)", path)
+			return cfg, err
+		}
+		err = errors.Wrapf(err, "failed to read config file: %s", path)
+		return cfg, err
+	}
+
+	// Parse JSON
+	err = json.Unmarshal(data, &cfg)
+	if err != nil {
+		err = errors.Wrapf(err, "failed to parse config file: %s", path)
+		return cfg, err
+	}
+
+	// Override with environment variable if set
+	if apiKey := os.Getenv("ANTHROPIC_API_KEY"); apiKey != "" {
+		cfg.AnthropicAPIKey = apiKey
+	}
+
+	// Validate required fields
+	err = cfg.Validate()
+	if err != nil {
+		err = errors.Wrap(err, "config validation failed")
+		return cfg, err
+	}
+
+	return cfg, err
+}
+
+// Validate checks that all required configuration is present.
+func (c *Config) Validate() (err error) {
+	if c.AnthropicAPIKey == "" {
+		err = errors.New("anthropic_api_key is required (set in config or ANTHROPIC_API_KEY env var)")
+		return err
+	}
+
+	if c.SummariesLocation == "" {
+		err = errors.New("summaries_location is required in config")
+		return err
+	}
+
+	// Check summaries file exists
+	_, err = os.Stat(c.SummariesLocation)
+	if os.IsNotExist(err) {
+		err = errors.Errorf("summaries file not found: %s", c.SummariesLocation)
+		return err
+	}
+
+	if c.Pandoc.TemplatePath == "" {
+		err = errors.New("pandoc.template_path is required in config")
+		return err
+	}
+
+	if c.Pandoc.ClassFile == "" {
+		err = errors.New("pandoc.class_file is required in config")
+		return err
+	}
+
+	// Set default output_dir if not specified
+	if c.Defaults.OutputDir == "" {
+		c.Defaults.OutputDir = "./applications"
+	}
+
+	return err
+}
+
+// InitConfig creates a default configuration file.
+func InitConfig(configPath string) (err error) {
+	// Determine config file location
+	path := configPath
+	if path == "" {
+		var homeDir string
+		homeDir, err = os.UserHomeDir()
+		if err != nil {
+			err = errors.Wrap(err, "failed to get user home directory")
+			return err
+		}
+		path = filepath.Join(homeDir, ".resume-tailor", "config.json")
+	}
+
+	// Create directory if it doesn't exist
+	dir := filepath.Dir(path)
+	err = os.MkdirAll(dir, 0750)
+	if err != nil {
+		err = errors.Wrapf(err, "failed to create config directory: %s", dir)
+		return err
+	}
+
+	// Check if file already exists
+	_, err = os.Stat(path)
+	if err == nil {
+		err = errors.Errorf("config file already exists: %s", path)
+		return err
+	}
+
+	// Create default config
+	var homeDir string
+	homeDir, err = os.UserHomeDir()
+	if err != nil {
+		err = errors.Wrap(err, "failed to get user home directory")
+		return err
+	}
+
+	defaultConfig := Config{
+		AnthropicAPIKey:   "sk-ant-api03-...",
+		SummariesLocation: filepath.Join(homeDir, "Documents", "nikogura.com", "summaries", "structured-summaries.json"),
+		Pandoc: PandocConfig{
+			TemplatePath: filepath.Join(homeDir, "Documents", "nikogura.com", "resume-template.latex"),
+			ClassFile:    filepath.Join(homeDir, "Documents", "nikogura.com", "resume.cls"),
+		},
+		Defaults: DefaultConfig{
+			OutputDir: "./applications",
+		},
+	}
+
+	// Write to file
+	var data []byte
+	data, err = json.MarshalIndent(defaultConfig, "", "  ")
+	if err != nil {
+		err = errors.Wrap(err, "failed to marshal default config")
+		return err
+	}
+
+	err = os.WriteFile(path, data, 0600)
+	if err != nil {
+		err = errors.Wrapf(err, "failed to write config file: %s", path)
+		return err
+	}
+
+	return err
+}
