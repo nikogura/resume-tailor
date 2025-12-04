@@ -1,12 +1,14 @@
 package cmd
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/nikogura/resume-tailor/pkg/config"
@@ -94,17 +96,14 @@ func runGenerate(cmd *cobra.Command, args []string) (err error) {
 	// Convert achievements to maps for JSON
 	achievementMaps := convertAchievements(data.Achievements)
 
-	// Phase 1 & 2: Analyze and Generate
+	// Phase 1: Analyze
 	client := llm.NewClient(cfg.AnthropicAPIKey)
 
 	var analysisResp llm.AnalysisResponse
-	analysisResp, err = client.Analyze(ctx, jobDescription, achievementMaps)
+	analysisResp, err = runAnalysisPhase(ctx, client, jobDescription, achievementMaps)
 	if err != nil {
-		err = errors.Wrap(err, "Claude API analysis failed")
 		return err
 	}
-
-	logAnalysisResults(analysisResp)
 
 	// Use extracted company and role if not provided
 	finalCompany, finalRole := extractCompanyAndRole(company, role, analysisResp.JDAnalysis)
@@ -120,18 +119,75 @@ func runGenerate(cmd *cobra.Command, args []string) (err error) {
 	topAchievements := filterTopAchievements(achievementMaps, analysisResp.RankedAchievements, 0.6)
 
 	// Phase 2: Generate
-	genReq := buildGenerationRequest(jobDescription, finalCompany, finalRole, analysisResp.JDAnalysis, topAchievements, data)
-
 	var genResp llm.GenerationResponse
-	genResp, err = client.Generate(ctx, genReq)
+	genResp, err = runGenerationPhase(ctx, client, jobDescription, finalCompany, finalRole, analysisResp.JDAnalysis, topAchievements, data)
 	if err != nil {
-		err = errors.Wrap(err, "Claude API generation failed")
 		return err
 	}
 
 	// Write and render output files
 	err = writeAndRenderOutput(genResp, outDir, finalRole, cfg.Pandoc.TemplatePath, cfg.Pandoc.ClassFile)
 	return err
+}
+
+func runAnalysisPhase(ctx context.Context, client *llm.Client, jobDescription string, achievementMaps []map[string]interface{}) (analysisResp llm.AnalysisResponse, err error) {
+	// Show spinner during analysis unless in verbose mode
+	var analysisSpinner *spinner
+	if !getVerbose() {
+		analysisSpinner = newSpinner("Analyzing job description with Claude API...")
+		analysisSpinner.start()
+	} else {
+		fmt.Println("Analyzing job description with Claude API...")
+	}
+
+	analysisResp, err = client.Analyze(ctx, jobDescription, achievementMaps)
+
+	if analysisSpinner != nil {
+		analysisSpinner.stopSpinner()
+	}
+
+	if err != nil {
+		err = errors.Wrap(err, "Claude API analysis failed")
+		return analysisResp, err
+	}
+
+	if !getVerbose() {
+		fmt.Println("✓ Analysis complete")
+	}
+
+	logAnalysisResults(analysisResp)
+
+	return analysisResp, err
+}
+
+func runGenerationPhase(ctx context.Context, client *llm.Client, jobDescription, company, role string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genResp llm.GenerationResponse, err error) {
+	genReq := buildGenerationRequest(jobDescription, company, role, analysis, achievements, data)
+
+	// Show spinner during generation unless in verbose mode
+	var genSpinner *spinner
+	if !getVerbose() {
+		genSpinner = newSpinner("Generating tailored resume and cover letter...")
+		genSpinner.start()
+	} else {
+		fmt.Println("Generating tailored resume and cover letter...")
+	}
+
+	genResp, err = client.Generate(ctx, genReq)
+
+	if genSpinner != nil {
+		genSpinner.stopSpinner()
+	}
+
+	if err != nil {
+		err = errors.Wrap(err, "Claude API generation failed")
+		return genResp, err
+	}
+
+	if !getVerbose() {
+		fmt.Println("✓ Generation complete")
+	}
+
+	return genResp, err
 }
 
 func writeAndRenderOutput(genResp llm.GenerationResponse, outDir, role, templatePath, classPath string) (err error) {
@@ -284,20 +340,108 @@ func extractCompanyAndRole(company, role string, analysis llm.JDAnalysis) (final
 	finalCompany = company
 	if finalCompany == "" {
 		finalCompany = analysis.CompanyName
-		if getVerbose() {
+		if getVerbose() && finalCompany != "" {
 			fmt.Printf("Extracted company from JD: %s\n", finalCompany)
 		}
+	}
+
+	// Prompt for company if still empty
+	if finalCompany == "" {
+		finalCompany = promptForInput("Company name")
 	}
 
 	finalRole = role
 	if finalRole == "" {
 		finalRole = analysis.RoleTitle
-		if getVerbose() {
+		if getVerbose() && finalRole != "" {
 			fmt.Printf("Extracted role from JD: %s\n", finalRole)
 		}
 	}
 
+	// Prompt for role if still empty
+	if finalRole == "" {
+		finalRole = promptForInput("Role title")
+	}
+
 	return finalCompany, finalRole
+}
+
+func promptForInput(fieldName string) (input string) {
+	fmt.Printf("%s could not be extracted from job description.\n", fieldName)
+	fmt.Printf("Please enter %s: ", strings.ToLower(fieldName))
+
+	scanner := bufio.NewScanner(os.Stdin)
+	if scanner.Scan() {
+		input = strings.TrimSpace(scanner.Text())
+	}
+
+	return input
+}
+
+// spinner provides a simple text-based progress indicator.
+type spinner struct {
+	message string
+	stop    chan bool
+	done    chan bool
+	mu      sync.Mutex
+	active  bool
+}
+
+func newSpinner(message string) (s *spinner) {
+	s = &spinner{
+		message: message,
+		stop:    make(chan bool),
+		done:    make(chan bool),
+	}
+	return s
+}
+
+func (s *spinner) start() {
+	s.mu.Lock()
+	if s.active {
+		s.mu.Unlock()
+		return
+	}
+	s.active = true
+	s.mu.Unlock()
+
+	go func() {
+		chars := []string{"|", "/", "-", "\\"}
+		i := 0
+		ticker := time.NewTicker(100 * time.Millisecond)
+		defer ticker.Stop()
+
+		fmt.Printf("%s ", s.message)
+		for {
+			select {
+			case <-s.stop:
+				fmt.Print("\r")
+				// Clear the line
+				fmt.Printf("\r%s\r", strings.Repeat(" ", len(s.message)+2))
+				s.done <- true
+				return
+			case <-ticker.C:
+				fmt.Printf("\r%s %s", s.message, chars[i%len(chars)])
+				i++
+			}
+		}
+	}()
+}
+
+func (s *spinner) stopSpinner() {
+	s.mu.Lock()
+	if !s.active {
+		s.mu.Unlock()
+		return
+	}
+	s.mu.Unlock()
+
+	s.stop <- true
+	<-s.done
+
+	s.mu.Lock()
+	s.active = false
+	s.mu.Unlock()
 }
 
 func createCompanyOutputDir(baseOutDir, company string) (outDir string, err error) {
