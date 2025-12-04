@@ -16,6 +16,7 @@ type AnalysisResponse struct {
 type JDAnalysis struct {
 	CompanyName     string   `json:"company_name"`
 	RoleTitle       string   `json:"role_title"`
+	HiringManager   string   `json:"hiring_manager,omitempty"`
 	KeyRequirements []string `json:"key_requirements"`
 	TechnicalStack  []string `json:"technical_stack"`
 	RoleFocus       string   `json:"role_focus"`
@@ -31,14 +32,16 @@ type RankedAchievement struct {
 
 // GenerationRequest represents Phase 2: Generate request.
 type GenerationRequest struct {
-	JobDescription string                   `json:"job_description"`
-	Company        string                   `json:"company"`
-	Role           string                   `json:"role"`
-	JDSummary      string                   `json:"jd_summary"`
-	Achievements   []map[string]interface{} `json:"achievements"`
-	Profile        map[string]interface{}   `json:"profile"`
-	Skills         map[string]interface{}   `json:"skills"`
-	Projects       []map[string]interface{} `json:"projects"`
+	JobDescription     string                   `json:"job_description"`
+	Company            string                   `json:"company"`
+	Role               string                   `json:"role"`
+	HiringManager      string                   `json:"hiring_manager,omitempty"`
+	JDSummary          string                   `json:"jd_summary"`
+	CoverLetterContext string                   `json:"cover_letter_context,omitempty"`
+	Achievements       []map[string]interface{} `json:"achievements"`
+	Profile            map[string]interface{}   `json:"profile"`
+	Skills             map[string]interface{}   `json:"skills"`
+	Projects           []map[string]interface{} `json:"projects"`
 }
 
 // GenerationResponse represents Phase 2: Generate response.

@@ -116,6 +116,12 @@ resume-tailor generate jd.txt \
 resume-tailor generate https://company.com/jobs/123 \
   --company "Acme Corp" \
   --role "Staff Engineer"
+
+# With additional context for the cover letter
+resume-tailor generate jd.txt \
+  --company "Acme Corp" \
+  --role "Staff Engineer" \
+  --context "Referred by Jane Smith, Engineering Manager. Excited about the company's recent Series B funding and growth plans."
 ```
 
 **Generates:**
@@ -126,9 +132,11 @@ resume-tailor generate https://company.com/jobs/123 \
 
 ### Options
 
-- `--company`: Company name (required)
-- `--role`: Role title (required)
+- `--company`: Company name (extracted from JD if not provided, prompts if extraction fails)
+- `--role`: Role title (extracted from JD if not provided, prompts if extraction fails)
+- `--context`: Additional context for cover letter generation (optional)
 - `--output-dir`: Output directory (default from config)
+- `--keep-markdown`: Keep markdown files after PDF generation
 - `--config`: Config file path (default: `~/.resume-tailor/config.json`)
 - `-v, --verbose`: Verbose output
 
@@ -169,8 +177,9 @@ This project follows strict Terrace engineering standards:
    - Returns ranked list with reasoning
 4. **Phase 2 - Generate**:
    - Sends top-ranked achievements (score ≥ 0.6) to Claude
+   - Includes optional context (referral info, company research, etc.) if provided
    - Claude generates tailored resume and cover letter
-   - Matches JD language naturally
+   - Matches JD language naturally and incorporates context into cover letter
 5. **Render**: Writes markdown and converts to PDF via pandoc
 
 ## Cost Estimate

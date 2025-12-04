@@ -33,6 +33,9 @@ var outputDir string
 var keepMarkdown bool
 
 //nolint:gochecknoglobals // Cobra boilerplate
+var coverLetterContext string
+
+//nolint:gochecknoglobals // Cobra boilerplate
 var generateCmd = &cobra.Command{
 	Use:   "generate <jd-file-or-url>",
 	Short: "Generate tailored resume and cover letter",
@@ -56,6 +59,7 @@ func init() {
 	generateCmd.Flags().StringVar(&role, "role", "", "Role title (extracted from JD if not provided)")
 	generateCmd.Flags().StringVar(&outputDir, "output-dir", "", "Output directory (default from config)")
 	generateCmd.Flags().BoolVar(&keepMarkdown, "keep-markdown", false, "Keep markdown files after PDF generation")
+	generateCmd.Flags().StringVar(&coverLetterContext, "context", "", "Additional context for cover letter generation")
 }
 
 func runGenerate(cmd *cobra.Command, args []string) (err error) {
@@ -120,7 +124,7 @@ func runGenerate(cmd *cobra.Command, args []string) (err error) {
 
 	// Phase 2: Generate
 	var genResp llm.GenerationResponse
-	genResp, err = runGenerationPhase(ctx, client, jobDescription, finalCompany, finalRole, analysisResp.JDAnalysis, topAchievements, data)
+	genResp, err = runGenerationPhase(ctx, client, jobDescription, finalCompany, finalRole, coverLetterContext, analysisResp.JDAnalysis, topAchievements, data)
 	if err != nil {
 		return err
 	}
@@ -160,8 +164,8 @@ func runAnalysisPhase(ctx context.Context, client *llm.Client, jobDescription st
 	return analysisResp, err
 }
 
-func runGenerationPhase(ctx context.Context, client *llm.Client, jobDescription, company, role string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genResp llm.GenerationResponse, err error) {
-	genReq := buildGenerationRequest(jobDescription, company, role, analysis, achievements, data)
+func runGenerationPhase(ctx context.Context, client *llm.Client, jobDescription, company, role, context string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genResp llm.GenerationResponse, err error) {
+	genReq := buildGenerationRequest(jobDescription, company, role, context, analysis, achievements, data)
 
 	// Show spinner during generation unless in verbose mode
 	var genSpinner *spinner
@@ -265,16 +269,18 @@ func renderAndCleanupGenerate(resumeMD, resumePDF, coverMD, coverPDF, templatePa
 	return err
 }
 
-func buildGenerationRequest(jobDescription, company, role string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genReq llm.GenerationRequest) {
+func buildGenerationRequest(jobDescription, company, role, context string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genReq llm.GenerationRequest) {
 	genReq = llm.GenerationRequest{
-		JobDescription: jobDescription,
-		Company:        company,
-		Role:           role,
-		JDSummary:      buildJDSummary(analysis),
-		Achievements:   achievements,
-		Profile:        profileToMap(data.Profile),
-		Skills:         skillsToMap(data.Skills),
-		Projects:       projectsToMaps(data.OpensourceProjects),
+		JobDescription:     jobDescription,
+		Company:            company,
+		Role:               role,
+		HiringManager:      analysis.HiringManager,
+		JDSummary:          buildJDSummary(analysis),
+		CoverLetterContext: context,
+		Achievements:       achievements,
+		Profile:            profileToMap(data.Profile),
+		Skills:             skillsToMap(data.Skills),
+		Projects:           projectsToMaps(data.OpensourceProjects),
 	}
 	return genReq
 }

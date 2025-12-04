@@ -20,16 +20,18 @@ CANDIDATE ACHIEVEMENTS:
 Analyze the job description and:
 1. Extract the company name from the job description
 2. Extract the role title from the job description
-3. Extract key requirements (technical skills, experience, domain expertise)
-4. Identify role signals (IC vs leadership, security vs performance focus, platform vs application focus)
-5. Score each achievement 0.0-1.0 on relevance to this specific role
-6. Provide brief reasoning for each score
+3. Extract the hiring manager's name if mentioned (leave empty if not found)
+4. Extract key requirements (technical skills, experience, domain expertise)
+5. Identify role signals (IC vs leadership, security vs performance focus, platform vs application focus)
+6. Score each achievement 0.0-1.0 on relevance to this specific role
+7. Provide brief reasoning for each score
 
 Return ONLY valid JSON in this exact format (no markdown, no commentary):
 {
   "jd_analysis": {
     "company_name": "extracted company name from JD",
     "role_title": "extracted role title from JD",
+    "hiring_manager": "hiring manager name if mentioned, empty string otherwise",
     "key_requirements": ["requirement1", "requirement2"],
     "technical_stack": ["tech1", "tech2"],
     "role_focus": "description of role focus",
@@ -54,6 +56,15 @@ func buildGenerationPrompt(req GenerationRequest) (prompt string) {
 	skillsJSON, _ := json.MarshalIndent(req.Skills, "", "  ")
 	projectsJSON, _ := json.MarshalIndent(req.Projects, "", "  ")
 
+	contextSection := ""
+	if req.CoverLetterContext != "" {
+		contextSection = fmt.Sprintf(`
+ADDITIONAL CONTEXT FOR COVER LETTER:
+%s
+
+`, req.CoverLetterContext)
+	}
+
 	prompt = fmt.Sprintf(`You are an expert resume writer creating tailored application materials.
 
 JOB DESCRIPTION:
@@ -73,7 +84,7 @@ SKILLS:
 
 OPEN SOURCE PROJECTS:
 %s
-
+%s
 Generate a tailored resume and cover letter in markdown format.
 
 RESUME REQUIREMENTS:
@@ -91,10 +102,12 @@ RESUME REQUIREMENTS:
 - Open source projects: Top 3-5 most relevant, formatted as markdown hyperlinks: **[Project Name](url)** - description
 
 COVER LETTER REQUIREMENTS:
+- CRITICAL GREETING: If hiring_manager field is provided and not empty, use "Dear [Hiring Manager Name],". If hiring_manager is empty, clean the company name by removing suffixes like "LLC", "Inc", "Inc.", "Corp", "Corporation", "Ltd", "Limited", "Co.", etc. and use "Dear [Cleaned Company Name]," (e.g., "Stormlight Capital LLC" becomes "Dear Stormlight Capital,")
 - Opening paragraph: Express genuine interest in role and company
 - Body (2-3 paragraphs): Weave specific achievement stories showing you've solved similar problems
 - Use the challenge/execution/impact structure from achievements
 - Match the JD's language and priorities naturally
+- CRITICAL: If additional context is provided, incorporate it naturally into the cover letter to personalize the application
 - CRITICAL: Use ONLY metrics and claims explicitly stated in the achievement data - never fabricate, extrapolate, or infer impact
 - CRITICAL: Avoid overly internal language - keep stories externally appropriate and professional
 - Closing: Clear call to action
@@ -111,7 +124,7 @@ Return ONLY valid JSON in this exact format (no markdown, no commentary):
 CRITICAL: Ensure all JSON strings are properly escaped. Use \\n for newlines, \\" for quotes.`,
 		req.JobDescription, req.Company, req.Role,
 		string(profileJSON), string(achievementsJSON),
-		string(skillsJSON), string(projectsJSON))
+		string(skillsJSON), string(projectsJSON), contextSection)
 
 	return prompt
 }
