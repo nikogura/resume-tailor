@@ -10,7 +10,7 @@ Generate tailored resumes and cover letters using Claude API to analyze job desc
   - Phase 2: Generate tailored resume and cover letter
 - **PDF Rendering**: Automatic PDF generation using pandoc with custom LaTeX templates
 - **Flexible Input**: Accept job descriptions as files or URLs
-- **Standards Compliant**: Follows Terrace engineering standards with golangci-lint + namedreturns
+- **Standards Compliant**: Follows [Nik Ogura's engineering standards](https://nikogura.com/EngineeringStandards.html) with golangci-lint + namedreturns
 
 ## Prerequisites
 
@@ -66,12 +66,12 @@ Your achievements must be in JSON format. Example:
 {
   "achievements": [
     {
-      "id": "terrace-multicloud",
-      "company": "Terrace",
-      "role": "CIO & Head of Engineering",
+      "id": "acme-multicloud",
+      "company": "Acme Corp",
+      "role": "Principal Engineer",
       "dates": "2023-Present",
       "title": "Multi-Cloud Platform Architecture",
-      "challenge": "Build enterprise-grade crypto trading platform spanning multiple clouds and on-premises.",
+      "challenge": "Build enterprise-grade platform spanning multiple clouds and on-premises.",
       "execution": "Architected multi-cloud, hybrid Kubernetes platform spanning AWS, GCP, and bare-metal...",
       "impact": "Infinite agility, no vendor lock-in, predictable costs, enterprise security",
       "metrics": ["100x data capacity", "600ms → microseconds latency"],
@@ -163,7 +163,7 @@ make clean
 
 ### Code Standards
 
-This project follows strict Terrace engineering standards:
+This project follows strict [Nik Ogura's engineering standards](https://nikogura.com/EngineeringStandards.html):
 
 - **Named returns mandatory**: All functions with multiple returns use named return values
 - **No inline error handling**: Separate error declaration from checking

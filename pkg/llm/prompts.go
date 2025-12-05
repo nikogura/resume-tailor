@@ -96,7 +96,7 @@ RESUME REQUIREMENTS:
 - Professional summary: 3-5 bullet points highlighting most relevant experience for THIS role (NOT a paragraph)
 - CRITICAL: When stating years of experience, use the EXACT number from profile.years_experience field (not "15+" when the candidate has 25+ years)
 - Employment history: Top 5-7 most relevant companies with 3-5 bullets each, ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST (2023-Present, then 2022-2023, then 2020-2022, etc.)
-- CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Terrace](https://app.terrace.fi)** | *CIO & Director of Infrastructure* | 2023-Present)
+- CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Acme Corp](https://acme.example.com)** | *Principal Engineer* | 2023-Present)
 - Focus bullets on achievements from the provided list that match JD requirements
 - CRITICAL: Use ONLY metrics and claims explicitly stated in the achievement data - never fabricate, extrapolate, or infer impact
 - CRITICAL: Add blank line (\\n\\n) between each bullet point for readability
@@ -167,7 +167,7 @@ RESUME REQUIREMENTS:
 - Professional summary: 3-5 bullet points highlighting breadth and depth of experience
 - CRITICAL: When stating years of experience, use the EXACT number from profile.years_experience field
 - Employment history: Include all major roles with 3-5 bullets each showing most impactful achievements, ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST (2023-Present, then 2022-2023, then 2020-2022, etc.)
-- CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Terrace](https://app.terrace.fi)** | *CIO & Director of Infrastructure* | 2023-Present)
+- CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Acme Corp](https://acme.example.com)** | *Principal Engineer* | 2023-Present)
 - Focus on quantifiable achievements and technical depth
 - CRITICAL: Use ONLY metrics and claims explicitly stated in the achievement data - never fabricate, extrapolate, or infer impact
 - CRITICAL: Add blank line (\\n\\n) between each bullet point for readability
