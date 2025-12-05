@@ -55,6 +55,7 @@ func buildGenerationPrompt(req GenerationRequest) (prompt string) {
 	profileJSON, _ := json.MarshalIndent(req.Profile, "", "  ")
 	skillsJSON, _ := json.MarshalIndent(req.Skills, "", "  ")
 	projectsJSON, _ := json.MarshalIndent(req.Projects, "", "  ")
+	companyURLsJSON, _ := json.MarshalIndent(req.CompanyURLs, "", "  ")
 
 	contextSection := ""
 	if req.CoverLetterContext != "" {
@@ -84,6 +85,9 @@ SKILLS:
 
 OPEN SOURCE PROJECTS:
 %s
+
+COMPANY URLS:
+%s
 %s
 Generate a tailored resume and cover letter in markdown format.
 
@@ -92,13 +96,14 @@ RESUME REQUIREMENTS:
 - Professional summary: 3-5 bullet points highlighting most relevant experience for THIS role (NOT a paragraph)
 - CRITICAL: When stating years of experience, use the EXACT number from profile.years_experience field (not "15+" when the candidate has 25+ years)
 - Employment history: Top 5-7 most relevant companies with 3-5 bullets each, ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST (2023-Present, then 2022-2023, then 2020-2022, etc.)
+- CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Terrace](https://app.terrace.fi)** | *CIO & Director of Infrastructure* | 2023-Present)
 - Focus bullets on achievements from the provided list that match JD requirements
 - CRITICAL: Use ONLY metrics and claims explicitly stated in the achievement data - never fabricate, extrapolate, or infer impact
 - CRITICAL: Add blank line (\\n\\n) between each bullet point for readability
 - CRITICAL: Keep technical details (bare-metal, multi-cloud, specific technologies, architectures) - these are differentiators
 - CRITICAL: Generalize organizational language (e.g., "mandatory across all X codebases" → "established organization-wide", "used by X team" → "deployed company-wide")
 - Keep achievements professional and externally presentable - describe impact and technical approach without revealing internal politics or structure
-- Skills section: Only include skills relevant to this JD, organized by category
+- Skills section: ONLY include skills that are EXPLICITLY listed in the provided SKILLS data above AND are relevant to this JD - NEVER add, infer, or extrapolate skills mentioned in the JD that are not in the provided skills data - organize by category
 - Open source projects: Top 3-5 most relevant, formatted as markdown hyperlinks: **[Project Name](url)** - description
 
 COVER LETTER REQUIREMENTS:
@@ -124,7 +129,8 @@ Return ONLY valid JSON in this exact format (no markdown, no commentary):
 CRITICAL: Ensure all JSON strings are properly escaped. Use \\n for newlines, \\" for quotes.`,
 		req.JobDescription, req.Company, req.Role,
 		string(profileJSON), string(achievementsJSON),
-		string(skillsJSON), string(projectsJSON), contextSection)
+		string(skillsJSON), string(projectsJSON),
+		string(companyURLsJSON), contextSection)
 
 	return prompt
 }
@@ -135,6 +141,7 @@ func buildGeneralResumePrompt(req GeneralResumeRequest) (prompt string) {
 	profileJSON, _ := json.MarshalIndent(req.Profile, "", "  ")
 	skillsJSON, _ := json.MarshalIndent(req.Skills, "", "  ")
 	projectsJSON, _ := json.MarshalIndent(req.Projects, "", "  ")
+	companyURLsJSON, _ := json.MarshalIndent(req.CompanyURLs, "", "  ")
 
 	prompt = fmt.Sprintf(`You are an expert resume writer creating a comprehensive general resume.
 
@@ -150,6 +157,9 @@ SKILLS:
 OPEN SOURCE PROJECTS:
 %s
 
+COMPANY URLS:
+%s
+
 Generate a comprehensive general resume in markdown format that includes most relevant achievements while staying at or under 3 pages when rendered to PDF.
 
 RESUME REQUIREMENTS:
@@ -157,13 +167,14 @@ RESUME REQUIREMENTS:
 - Professional summary: 3-5 bullet points highlighting breadth and depth of experience
 - CRITICAL: When stating years of experience, use the EXACT number from profile.years_experience field
 - Employment history: Include all major roles with 3-5 bullets each showing most impactful achievements, ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST (2023-Present, then 2022-2023, then 2020-2022, etc.)
+- CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Terrace](https://app.terrace.fi)** | *CIO & Director of Infrastructure* | 2023-Present)
 - Focus on quantifiable achievements and technical depth
 - CRITICAL: Use ONLY metrics and claims explicitly stated in the achievement data - never fabricate, extrapolate, or infer impact
 - CRITICAL: Add blank line (\\n\\n) between each bullet point for readability
 - CRITICAL: Keep technical details (bare-metal, multi-cloud, specific technologies, architectures) - these are differentiators
 - CRITICAL: Generalize organizational language (e.g., "mandatory across all X codebases" → "established organization-wide", "used by X team" → "deployed company-wide")
 - Keep achievements professional and externally presentable
-- Skills section: Organize by category, include all relevant skills
+- Skills section: ONLY include skills that are EXPLICITLY listed in the provided SKILLS data above - NEVER add, infer, or extrapolate skills not in the data - organize by category
 - Open source projects: Top 5-7 projects, formatted as markdown hyperlinks: **[Project Name](url)** - description
 - Target: 3 pages or less when rendered to PDF with standard resume formatting
 
@@ -176,7 +187,8 @@ Return ONLY valid JSON in this exact format (no markdown, no commentary):
 
 CRITICAL: Ensure all JSON strings are properly escaped. Use \\n for newlines, \\" for quotes.`,
 		string(profileJSON), string(achievementsJSON),
-		string(skillsJSON), string(projectsJSON))
+		string(skillsJSON), string(projectsJSON),
+		string(companyURLsJSON))
 
 	return prompt
 }

@@ -92,6 +92,7 @@ func runGeneral(cmd *cobra.Command, args []string) (err error) {
 		Profile:      profileToMap(data.Profile),
 		Skills:       skillsToMap(data.Skills),
 		Projects:     projectsToMaps(data.OpensourceProjects),
+		CompanyURLs:  data.CompanyURLs,
 	}
 
 	var genResp llm.GeneralResumeResponse

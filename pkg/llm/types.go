@@ -42,6 +42,7 @@ type GenerationRequest struct {
 	Profile            map[string]interface{}   `json:"profile"`
 	Skills             map[string]interface{}   `json:"skills"`
 	Projects           []map[string]interface{} `json:"projects"`
+	CompanyURLs        map[string]string        `json:"company_urls"`
 }
 
 // GenerationResponse represents Phase 2: Generate response.
@@ -56,6 +57,7 @@ type GeneralResumeRequest struct {
 	Profile      map[string]interface{}   `json:"profile"`
 	Skills       map[string]interface{}   `json:"skills"`
 	Projects     []map[string]interface{} `json:"projects"`
+	CompanyURLs  map[string]string        `json:"company_urls"`
 }
 
 // GeneralResumeResponse represents the response for a general resume.

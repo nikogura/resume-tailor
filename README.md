@@ -41,6 +41,7 @@ Create config file at `~/.resume-tailor/config.json`:
 
 ```json
 {
+  "name": "your-name",
   "anthropic_api_key": "sk-ant-api03-...",
   "summaries_location": "/home/you/Documents/nikogura.com/summaries/structured-summaries.json",
   "pandoc": {
@@ -52,6 +53,8 @@ Create config file at `~/.resume-tailor/config.json`:
   }
 }
 ```
+
+**Note:** The `name` field is used in output filenames (e.g., `your-name-acme-corp-staff-engineer-resume.pdf`)
 
 **Environment Variable Override**: Set `ANTHROPIC_API_KEY` to override config file.
 
@@ -125,10 +128,10 @@ resume-tailor generate jd.txt \
 ```
 
 **Generates:**
-- `acme-corp-staff-devops-engineer-resume.md`
-- `acme-corp-staff-devops-engineer-resume.pdf`
-- `acme-corp-staff-devops-engineer-cover-letter.md`
-- `acme-corp-staff-devops-engineer-cover-letter.pdf`
+- `your-name-acme-corp-staff-devops-engineer-resume.md`
+- `your-name-acme-corp-staff-devops-engineer-resume.pdf`
+- `your-name-acme-corp-staff-devops-engineer-cover.md`
+- `your-name-acme-corp-staff-devops-engineer-cover.pdf`
 
 ### Options
 

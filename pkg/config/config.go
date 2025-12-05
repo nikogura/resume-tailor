@@ -10,6 +10,7 @@ import (
 
 // Config represents the application configuration.
 type Config struct {
+	Name              string        `json:"name"`
 	AnthropicAPIKey   string        `json:"anthropic_api_key"`
 	SummariesLocation string        `json:"summaries_location"`
 	Pandoc            PandocConfig  `json:"pandoc"`
@@ -77,6 +78,11 @@ func Load(configPath string) (cfg Config, err error) {
 
 // Validate checks that all required configuration is present.
 func (c *Config) Validate() (err error) {
+	if c.Name == "" {
+		err = errors.New("name is required in config")
+		return err
+	}
+
 	if c.AnthropicAPIKey == "" {
 		err = errors.New("anthropic_api_key is required (set in config or ANTHROPIC_API_KEY env var)")
 		return err

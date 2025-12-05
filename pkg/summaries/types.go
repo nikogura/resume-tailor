@@ -2,6 +2,7 @@ package summaries
 
 // Data represents the complete summaries data structure.
 type Data struct {
+	CompanyURLs        map[string]string   `json:"company_urls"`
 	Achievements       []Achievement       `json:"achievements"`
 	Profile            Profile             `json:"profile"`
 	Skills             Skills              `json:"skills"`

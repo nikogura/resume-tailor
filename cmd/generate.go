@@ -130,7 +130,7 @@ func runGenerate(cmd *cobra.Command, args []string) (err error) {
 	}
 
 	// Write and render output files
-	err = writeAndRenderOutput(genResp, outDir, finalRole, cfg.Pandoc.TemplatePath, cfg.Pandoc.ClassFile)
+	err = writeAndRenderOutput(genResp, outDir, cfg.Name, finalCompany, finalRole, cfg.Pandoc.TemplatePath, cfg.Pandoc.ClassFile)
 	return err
 }
 
@@ -194,13 +194,17 @@ func runGenerationPhase(ctx context.Context, client *llm.Client, jobDescription,
 	return genResp, err
 }
 
-func writeAndRenderOutput(genResp llm.GenerationResponse, outDir, role, templatePath, classPath string) (err error) {
-	// Generate output filenames (role only, since company is in directory name)
-	baseFilename := sanitizeFilename(role)
+func writeAndRenderOutput(genResp llm.GenerationResponse, outDir, name, company, role, templatePath, classPath string) (err error) {
+	// Generate output filenames: name-company-role-{resume,cover}.pdf
+	sanitizedName := sanitizeFilename(name)
+	sanitizedCompany := sanitizeFilename(company)
+	sanitizedRole := sanitizeFilename(role)
+	baseFilename := sanitizedName + "-" + sanitizedCompany + "-" + sanitizedRole
+
 	resumeMD := filepath.Join(outDir, baseFilename+"-resume.md")
 	resumePDF := filepath.Join(outDir, baseFilename+"-resume.pdf")
-	coverMD := filepath.Join(outDir, baseFilename+"-cover-letter.md")
-	coverPDF := filepath.Join(outDir, baseFilename+"-cover-letter.pdf")
+	coverMD := filepath.Join(outDir, baseFilename+"-cover.md")
+	coverPDF := filepath.Join(outDir, baseFilename+"-cover.pdf")
 
 	if getVerbose() {
 		fmt.Println("Writing markdown files...")
@@ -266,6 +270,9 @@ func renderAndCleanupGenerate(resumeMD, resumePDF, coverMD, coverPDF, templatePa
 
 	fmt.Println("\nGeneration complete!")
 
+	// Ensure stdout is flushed before exiting
+	os.Stdout.Sync()
+
 	return err
 }
 
@@ -281,6 +288,7 @@ func buildGenerationRequest(jobDescription, company, role, context string, analy
 		Profile:            profileToMap(data.Profile),
 		Skills:             skillsToMap(data.Skills),
 		Projects:           projectsToMaps(data.OpensourceProjects),
+		CompanyURLs:        data.CompanyURLs,
 	}
 	return genReq
 }
@@ -300,7 +308,34 @@ func fetchAndLogJD(jdInput string) (jobDescription string, err error) {
 
 	jobDescription, err = jd.Fetch(jdInput)
 	if err != nil {
-		err = errors.Wrap(err, "failed to fetch job description")
+		// If fetching failed, offer to accept manual input
+		fmt.Printf("\nWarning: Failed to fetch job description from URL: %v\n", err)
+		fmt.Println("This often happens with JavaScript-rendered pages (Lever, Workable, etc.)")
+		fmt.Println("\nPlease paste the job description text below.")
+		fmt.Println("When finished, press Ctrl+D (Unix/Mac) or Ctrl+Z then Enter (Windows):")
+		fmt.Println()
+
+		scanner := bufio.NewScanner(os.Stdin)
+		var lines []string
+		for scanner.Scan() {
+			lines = append(lines, scanner.Text())
+		}
+
+		if scanner.Err() != nil {
+			err = errors.Wrap(scanner.Err(), "failed to read job description from stdin")
+			return jobDescription, err
+		}
+
+		jobDescription = strings.Join(lines, "\n")
+		jobDescription = strings.TrimSpace(jobDescription)
+
+		if jobDescription == "" {
+			err = errors.New("no job description provided")
+			return jobDescription, err
+		}
+
+		fmt.Printf("\nJob description received (%d characters)\n", len(jobDescription))
+		err = nil
 		return jobDescription, err
 	}
 
@@ -421,8 +456,7 @@ func (s *spinner) start() {
 		for {
 			select {
 			case <-s.stop:
-				fmt.Print("\r")
-				// Clear the line
+				// Clear the line and ensure cursor is at start of new line
 				fmt.Printf("\r%s\r", strings.Repeat(" ", len(s.message)+2))
 				s.done <- true
 				return
@@ -553,8 +587,31 @@ Company Signals: %s`,
 }
 
 func sanitizeFilename(name string) (sanitized string) {
+	// Remove common company suffixes
+	suffixes := []string{
+		" LLC", " llc",
+		" Inc.", " inc.",
+		" Inc", " inc",
+		" Corporation", " corporation",
+		" Corp.", " corp.",
+		" Corp", " corp",
+		" Limited", " limited",
+		" Ltd.", " ltd.",
+		" Ltd", " ltd",
+		" Co.", " co.",
+		" Co", " co",
+		", LLC", ", llc",
+		", Inc.", ", inc.",
+		", Inc", ", inc",
+	}
+
+	sanitized = name
+	for _, suffix := range suffixes {
+		sanitized = strings.TrimSuffix(sanitized, suffix)
+	}
+
 	// Convert to lowercase
-	sanitized = strings.ToLower(name)
+	sanitized = strings.ToLower(sanitized)
 
 	// Replace spaces and special chars with hyphens
 	sanitized = strings.Map(func(r rune) (result rune) {
