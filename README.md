@@ -2,6 +2,12 @@
 
 Generate tailored resumes and cover letters using Claude API to analyze job descriptions and select the most relevant achievements from your career history.
 
+I've been working in tech professionaly for 25+ years.  It's really difficult to get all relevant experiences into a resume that is short enough that people will actually read it.
+
+Hiring managers want to see your qualifications for their exact jobs, everything else is noise.
+
+With the structured summaries of your job experiences and achievements, an agent can quickly match what you've done with what they're looking for and put your best foot forward.
+
 ## Features
 
 - **AI-Powered Analysis**: Uses Claude API to analyze job descriptions and rank your achievements by relevance
