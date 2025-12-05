@@ -89,7 +89,7 @@ Your achievements must be in JSON format. Example:
     "name": "Your Name",
     "title": "Principal Engineer",
     "location": "City, State",
-    "motto": "Your motto",
+    "motto": "Your motto, if you have one",
     "profiles": {
       "github": "https://github.com/username",
       "linkedin": "https://linkedin.com/in/username"
@@ -102,9 +102,9 @@ Your achievements must be in JSON format. Example:
   },
   "opensource_projects": [
     {
-      "name": "Project Name",
-      "url": "https://github.com/username/project",
-      "description": "Description",
+      "name": "Dynamic Binary Toolkit (DBT)",
+      "url": "https://github.com/nikogura/dbt",
+      "description": "Self-updating signed binary distribution system. Builds, tests, publishes, and updates itself in flight. Used for distributing tools in cloud, containers, and laptops.",
       "recognition": "Listed in awesome-go"
     }
   ]
