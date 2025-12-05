@@ -13,6 +13,7 @@ func TestLoad(t *testing.T) {
 	configPath := filepath.Join(tmpDir, "config.json")
 
 	testConfig := Config{
+		Name:              "test-user",
 		AnthropicAPIKey:   "test-key",
 		SummariesLocation: tmpDir, // Use temp dir as it exists
 		Pandoc: PandocConfig{
@@ -65,6 +66,7 @@ func TestValidate(t *testing.T) {
 		{
 			name: "valid config",
 			config: Config{
+				Name:              "test-user",
 				AnthropicAPIKey:   "test-key",
 				SummariesLocation: os.TempDir(), // Exists
 				Pandoc: PandocConfig{
@@ -141,14 +143,25 @@ func TestInitConfig(t *testing.T) {
 		t.Error("Config file was not created")
 	}
 
-	// Verify we can load it.
-	cfg, err := Load(configPath)
+	// Read and verify the config structure without full validation.
+	// Full validation would require all paths to exist, which isn't needed for this test.
+	data, err := os.ReadFile(configPath)
 	if err != nil {
-		t.Fatalf("Failed to load created config: %v", err)
+		t.Fatalf("Failed to read config file: %v", err)
+	}
+
+	var cfg Config
+	err = json.Unmarshal(data, &cfg)
+	if err != nil {
+		t.Fatalf("Failed to unmarshal config: %v", err)
 	}
 
 	if cfg.Defaults.OutputDir == "" {
 		t.Error("Default output dir was not set")
+	}
+
+	if cfg.Name == "" {
+		t.Error("Default name was not set")
 	}
 }
 

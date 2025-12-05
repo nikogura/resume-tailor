@@ -156,6 +156,7 @@ func InitConfig(configPath string) (err error) {
 	}
 
 	defaultConfig := Config{
+		Name:              "your-name",
 		AnthropicAPIKey:   "sk-ant-api03-...",
 		SummariesLocation: filepath.Join(homeDir, "Documents", "nikogura.com", "summaries", "structured-summaries.json"),
 		Pandoc: PandocConfig{

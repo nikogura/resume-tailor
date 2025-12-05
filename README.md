@@ -64,6 +64,21 @@ Create config file at `~/.resume-tailor/config.json`:
 
 **Environment Variable Override**: Set `ANTHROPIC_API_KEY` to override config file.
 
+### LaTeX Templates
+
+The project includes default LaTeX templates in the `templates/` directory:
+- `templates/resume-template.latex` - Pandoc template for resume formatting
+- `templates/resume.cls` - LaTeX class file with custom styling
+
+To use these templates, copy them to your config directory:
+
+```bash
+cp templates/resume-template.latex ~/.resume-tailor/
+cp templates/resume.cls ~/.resume-tailor/
+```
+
+Or customize them and use your own paths in the config file.
+
 ## Summaries Data Structure
 
 Your achievements must be in JSON format. Example:
