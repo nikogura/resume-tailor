@@ -49,10 +49,10 @@ Create config file at `~/.resume-tailor/config.json`:
 {
   "name": "your-name",
   "anthropic_api_key": "sk-ant-api03-...",
-  "summaries_location": "/home/you/Documents/nikogura.com/summaries/structured-summaries.json",
+  "summaries_location": "~/.resume-tailor/structured-summaries.json",
   "pandoc": {
-    "template_path": "/home/you/Documents/nikogura.com/resume-template.latex",
-    "class_file": "/home/you/Documents/nikogura.com/resume.cls"
+    "template_path": "~/.resume-tailor/resume-template.latex",
+    "class_file": "~/.resume-tailor/resume.cls"
   },
   "defaults": {
     "output_dir": "./applications"
