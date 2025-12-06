@@ -1,1 +1,41 @@
+# Binary
 resume-tailor
+
+# Config files (may contain API keys)
+config.json
+.resume-tailor/
+
+# Output directories
+applications/
+Applications/
+
+# Generated files (keep markdown with --keep-markdown flag)
+*.pdf
+
+# Go artifacts
+*.test
+*.out
+coverage.txt
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Temporary files
+*.log
+*.tmp
+/tmp/
+
+# Test data (keep testdata/ directory but ignore generated content)
+testdata/*.pdf
+testdata/*.md

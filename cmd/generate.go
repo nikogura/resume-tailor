@@ -198,6 +198,12 @@ func writeAndRenderOutput(genResp llm.GenerationResponse, outDir, name, company,
 	// Generate output filenames: name-company-role-{resume,cover}.pdf
 	sanitizedName := sanitizeFilename(name)
 	sanitizedCompany := sanitizeFilename(company)
+
+	// Truncate role to first 4 words to keep filename reasonable
+	roleWords := strings.Fields(role)
+	if len(roleWords) > 4 {
+		role = strings.Join(roleWords[:4], " ")
+	}
 	sanitizedRole := sanitizeFilename(role)
 	baseFilename := sanitizedName + "-" + sanitizedCompany + "-" + sanitizedRole
 

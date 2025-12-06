@@ -1,0 +1,151 @@
+{
+  "achievements": [
+    {
+      "id": "salesforce-crm-migration",
+      "company": "GlobalSales Inc",
+      "role": "Senior Business Analyst",
+      "dates": "2022-2024",
+      "title": "Enterprise CRM Migration and Process Optimization",
+      "challenge": "Legacy CRM system couldn't scale with company growth. Sales team spent hours on manual data entry. No integration between sales, marketing, and customer service systems. Revenue forecasting was weeks behind actual pipeline changes.",
+      "execution": "Led cross-functional team to migrate from legacy system to Salesforce. Designed automated workflows reducing manual data entry by 80%. Integrated marketing automation platform with CRM for lead scoring. Built custom dashboards for executive visibility. Trained 200+ users across sales, marketing, and support teams.",
+      "impact": "Sales cycle shortened from 90 days to 45 days through better lead qualification. Revenue forecasting accuracy improved to 95%. Customer satisfaction scores increased 25% through faster response times. Sales team productivity increased allowing focus on high-value activities.",
+      "metrics": [
+        "200+ users trained and onboarded",
+        "80% reduction in manual data entry",
+        "Sales cycle: 90 days → 45 days",
+        "Revenue forecast accuracy: 95%"
+      ],
+      "keywords": [
+        "Salesforce",
+        "CRM",
+        "Business Process",
+        "Sales Operations",
+        "Change Management",
+        "User Training",
+        "Workflow Automation"
+      ],
+      "categories": [
+        "Business Analysis",
+        "Sales Operations",
+        "Process Improvement"
+      ]
+    },
+    {
+      "id": "online-learning-platform",
+      "company": "EduTech Solutions",
+      "role": "Product Manager",
+      "dates": "2020-2022",
+      "title": "Interactive Online Learning Platform Development",
+      "challenge": "Traditional classroom-only model limited student reach. No way to track student progress or identify struggling learners. Content creation was slow and expensive. Students wanted flexible self-paced learning options.",
+      "execution": "Launched interactive online learning platform with video content, quizzes, and peer discussion forums. Implemented analytics dashboard for instructors to track student engagement and performance. Created content authoring tools allowing instructors to build courses without technical expertise. Integrated payment processing for course enrollment.",
+      "impact": "Expanded student base from 500 to 5000 students within first year. Instructors identified at-risk students 3 weeks earlier through engagement analytics. Course creation time reduced from months to weeks. Revenue increased 300% through online course offerings.",
+      "metrics": [
+        "Student base: 500 → 5,000 students",
+        "50+ courses published online",
+        "Course creation time reduced 75%",
+        "300% revenue increase"
+      ],
+      "keywords": [
+        "Product Management",
+        "EdTech",
+        "Learning Management System",
+        "User Experience",
+        "Analytics",
+        "Content Management",
+        "Stakeholder Management"
+      ],
+      "categories": [
+        "Product Management",
+        "Education Technology",
+        "Digital Transformation"
+      ]
+    },
+    {
+      "id": "patient-scheduling-system",
+      "company": "HealthCare Partners",
+      "role": "Healthcare IT Specialist",
+      "dates": "2019-2020",
+      "title": "Automated Patient Scheduling and Reminder System",
+      "challenge": "Manual phone-based scheduling overwhelmed staff. No-show rate of 20% wasted physician time and capacity. Patients frustrated by long hold times for appointments. No integration between scheduling and billing systems.",
+      "execution": "Implemented online scheduling system integrated with electronic health records. Built automated SMS and email reminder system. Created waitlist management to fill cancelled appointment slots. Integrated scheduling data with billing system for accurate charge capture.",
+      "impact": "No-show rate decreased from 20% to 5% through automated reminders. Staff time on scheduling reduced 60% allowing focus on patient care. Patient satisfaction scores improved through online self-service. Revenue increased through better capacity utilization.",
+      "metrics": [
+        "No-show rate: 20% → 5%",
+        "60% reduction in scheduling staff time",
+        "5,000+ online appointments booked monthly",
+        "15% increase in appointment capacity utilization"
+      ],
+      "keywords": [
+        "Healthcare IT",
+        "Patient Experience",
+        "Process Automation",
+        "EHR Integration",
+        "Workflow Optimization",
+        "Change Management",
+        "Compliance"
+      ],
+      "categories": [
+        "Healthcare IT",
+        "Process Improvement",
+        "Patient Experience"
+      ]
+    }
+  ],
+  "profile": {
+    "name": "Jane Smith",
+    "title": "Business Technology Specialist",
+    "location": "Chicago, IL, USA",
+    "years_experience": 12,
+    "motto": "Bridging technology and business for measurable results",
+    "profiles": {
+      "github": "https://github.com/janesmith",
+      "linkedin": "https://linkedin.com/in/janesmith",
+      "website": "https://janesmith-consulting.com"
+    }
+  },
+  "skills": {
+    "business_systems": [
+      "Salesforce",
+      "Microsoft Dynamics",
+      "SAP",
+      "Oracle ERP"
+    ],
+    "analysis": [
+      "Business Process Modeling",
+      "Requirements Analysis",
+      "Data Analysis",
+      "Workflow Design"
+    ],
+    "tools": [
+      "Tableau",
+      "Power BI",
+      "JIRA",
+      "Confluence"
+    ],
+    "methodologies": [
+      "Agile",
+      "Scrum",
+      "Six Sigma",
+      "Change Management"
+    ]
+  },
+  "opensource_projects": [
+    {
+      "name": "Healthcare Scheduling Template",
+      "url": "https://github.com/janesmith/healthcare-scheduling-template",
+      "description": "Open source template for healthcare appointment scheduling with privacy-first design",
+      "recognition": "Used by 10+ community health centers"
+    },
+    {
+      "name": "CRM Data Migration Toolkit",
+      "url": "https://github.com/janesmith/crm-migration-toolkit",
+      "description": "Tools and scripts for migrating data between CRM systems with data validation",
+      "recognition": "200+ stars on GitHub"
+    }
+  ],
+  "company_urls": {
+    "GlobalSales Inc": "https://globalsales.example.com",
+    "EduTech Solutions": "https://edutech.example.com",
+    "HealthCare Partners": "https://healthcare.example.com"
+  }
+}

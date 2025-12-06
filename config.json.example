@@ -1,0 +1,12 @@
+{
+  "name": "john-doe",
+  "anthropic_api_key": "sk-ant-api03-YOUR_API_KEY_HERE",
+  "summaries_location": "~/.resume-tailor/structured-summaries.json",
+  "pandoc": {
+    "template_path": "~/.resume-tailor/resume-template.latex",
+    "class_file": "~/.resume-tailor/resume.cls"
+  },
+  "defaults": {
+    "output_dir": "~/Documents/Applications"
+  }
+}

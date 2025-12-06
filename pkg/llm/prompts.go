@@ -95,6 +95,7 @@ RESUME REQUIREMENTS:
 - Header: Use raw LaTeX centering: \begin{center} on first line, then {\Large\bfseries Name} for centered name, then location, then all links on ONE line using LaTeX href format: \href{url}{GitHub} | \href{url}{LinkedIn} | \href{url}{Website}, then motto in italics, then \end{center}
 - Professional summary: 3-5 bullet points highlighting most relevant experience for THIS role (NOT a paragraph)
 - CRITICAL: When stating years of experience, use the EXACT number from profile.years_experience field (not "15+" when the candidate has 25+ years)
+- CRITICAL TEMPORAL IMPOSSIBILITY: NEVER claim X years of experience with a specific technology/tool if that tool didn't exist for X years. Example: Do NOT say "25+ years with Terraform" when Terraform was first released in 2014. Instead say "25+ years of infrastructure automation experience with expertise in Terraform" or "Deep expertise in Terraform across multi-cloud environments"
 - Employment history: Top 5-7 most relevant companies with 3-5 bullets each, ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST (2023-Present, then 2022-2023, then 2020-2022, etc.)
 - CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Acme Corp](https://acme.example.com)** | *Principal Engineer* | 2023-Present)
 - Focus bullets on achievements from the provided list that match JD requirements
@@ -103,7 +104,7 @@ RESUME REQUIREMENTS:
 - CRITICAL: Keep technical details (bare-metal, multi-cloud, specific technologies, architectures) - these are differentiators
 - CRITICAL: Generalize organizational language (e.g., "mandatory across all X codebases" → "established organization-wide", "used by X team" → "deployed company-wide")
 - Keep achievements professional and externally presentable - describe impact and technical approach without revealing internal politics or structure
-- Skills section: ONLY include skills that are EXPLICITLY listed in the provided SKILLS data above AND are relevant to this JD - NEVER add, infer, or extrapolate skills mentioned in the JD that are not in the provided skills data - organize by category
+- CRITICAL SKILLS ANTI-HALLUCINATION: Skills section MUST contain ONLY skills that are EXPLICITLY listed in the provided SKILLS data above. Before including ANY skill, verify it exists in the skills data. If you cannot find the exact skill name in the provided data, DO NOT include it. Examples: If the data has "Terraform" but not "CloudFormation", only list Terraform. If the JD requires a skill not in the data, omit it entirely from the resume. DO NOT add qualifiers, DO NOT infer related skills, DO NOT extrapolate. This is a hard requirement for compliance and truthfulness.
 - Open source projects: Top 3-5 most relevant, formatted as markdown hyperlinks: **[Project Name](url)** - description
 
 COVER LETTER REQUIREMENTS:
@@ -114,6 +115,8 @@ COVER LETTER REQUIREMENTS:
 - Match the JD's language and priorities naturally
 - CRITICAL: If additional context is provided, incorporate it naturally into the cover letter to personalize the application
 - CRITICAL: Use ONLY metrics and claims explicitly stated in the achievement data - never fabricate, extrapolate, or infer impact
+- CRITICAL ANTI-HALLUCINATION: Do NOT claim activities not explicitly listed in the data such as: conference speaking, presenting, publishing articles, blogging, teaching, mentoring programs, awards, certifications, patents, or any other activities. If the JD mentions these and the candidate data does not, simply DO NOT address them.
+- CRITICAL: Do NOT infer or extrapolate experiences from open source projects. Open sourcing code does NOT mean the candidate speaks at conferences, writes blog posts, or does external evangelism unless explicitly stated.
 - CRITICAL: Avoid overly internal language - keep stories externally appropriate and professional
 - Closing: Clear call to action
 - CRITICAL: End with proper letter format: "Sincerely,\\n\\n[Name]" or "Best regards,\\n\\n[Name]" (blank line between closing and name)
@@ -166,6 +169,7 @@ RESUME REQUIREMENTS:
 - Header: Use raw LaTeX centering: \begin{center} on first line, then {\Large\bfseries Name} for centered name, then location, then all links on ONE line using LaTeX href format: \href{url}{GitHub} | \href{url}{LinkedIn} | \href{url}{Website}, then motto in italics, then \end{center}
 - Professional summary: 3-5 bullet points highlighting breadth and depth of experience
 - CRITICAL: When stating years of experience, use the EXACT number from profile.years_experience field
+- CRITICAL TEMPORAL IMPOSSIBILITY: NEVER claim X years of experience with a specific technology/tool if that tool didn't exist for X years. Example: Do NOT say "25+ years with Terraform" when Terraform was first released in 2014. Instead say "25+ years of infrastructure automation experience with expertise in Terraform" or "Deep expertise in Terraform across multi-cloud environments"
 - Employment history: Include all major roles with 3-5 bullets each showing most impactful achievements, ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST (2023-Present, then 2022-2023, then 2020-2022, etc.)
 - CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Acme Corp](https://acme.example.com)** | *Principal Engineer* | 2023-Present)
 - Focus on quantifiable achievements and technical depth
@@ -174,7 +178,7 @@ RESUME REQUIREMENTS:
 - CRITICAL: Keep technical details (bare-metal, multi-cloud, specific technologies, architectures) - these are differentiators
 - CRITICAL: Generalize organizational language (e.g., "mandatory across all X codebases" → "established organization-wide", "used by X team" → "deployed company-wide")
 - Keep achievements professional and externally presentable
-- Skills section: ONLY include skills that are EXPLICITLY listed in the provided SKILLS data above - NEVER add, infer, or extrapolate skills not in the data - organize by category
+- CRITICAL SKILLS ANTI-HALLUCINATION: Skills section MUST contain ONLY skills that are EXPLICITLY listed in the provided SKILLS data above. Before including ANY skill, verify it exists in the skills data. If you cannot find the exact skill name in the provided data, DO NOT include it. If a skill appears useful but is not in the data, omit it entirely. DO NOT add qualifiers, DO NOT infer related skills, DO NOT extrapolate. This is a hard requirement for compliance and truthfulness.
 - Open source projects: Top 5-7 projects, formatted as markdown hyperlinks: **[Project Name](url)** - description
 - Target: 3 pages or less when rendered to PDF with standard resume formatting
 
