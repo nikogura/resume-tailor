@@ -26,6 +26,20 @@ Analyze the job description and:
 6. Score each achievement 0.0-1.0 on relevance to this specific role
 7. Provide brief reasoning for each score
 
+CRITICAL SCORING GUIDANCE - Technical Patterns Over Domain Keywords:
+- Prioritize TECHNICAL ARCHITECTURE and ENGINEERING PATTERNS over domain keyword matching
+- Example: "Distributed data curation for cryptocurrency" is HIGHLY relevant to "Healthcare payment processing" because BOTH require:
+  * Large-scale distributed data systems
+  * Data quality and validation pipelines
+  * Real-time data processing
+  * ETL patterns and data engineering
+  * High-cardinality data handling
+- DO NOT downrank achievements just because the domain differs (crypto ≠ healthcare, gaming ≠ fintech)
+- DO focus on transferable technical patterns: distributed systems, data engineering, scale, reliability, security architecture
+- Platform engineering experience (Kubernetes, observability, GitOps) transfers across ALL domains
+- Security architecture (authentication, authorization, compliance) transfers across ALL regulated industries
+- Look for achievements demonstrating scale, complexity, and architectural sophistication regardless of industry vertical
+
 Return ONLY valid JSON in this exact format (no markdown, no commentary):
 {
   "jd_analysis": {
@@ -121,6 +135,12 @@ Each company-role-date combination is unique and must not be mixed with other co
 
 - Professional summary: 3-5 bullet points highlighting most relevant experience for THIS role (NOT a paragraph)
 - CRITICAL PROFESSIONAL SUMMARY ANTI-HALLUCINATION: The Professional Summary MUST contain ONLY experience, technologies, frameworks, certifications, and compliance standards that are EXPLICITLY present in the candidate's achievement data, skills data, or profile. DO NOT claim experience with technologies just because they appear in the job description. Examples: If the JD mentions "ISO 27001" or "NIST 800-53" but the candidate data does not, DO NOT claim compliance framework experience. If the JD mentions "Kotlin" but it's not in the skills list, DO NOT claim Kotlin experience. Focus on what the candidate HAS done that's relevant, not what the JD wants. This is a hard requirement for truthfulness.
+- CRITICAL DOMAIN EXPERTISE FABRICATION: DO NOT infer broad domain expertise from narrow technical achievements or keyword pattern matching. Each domain term in professional summary must be EXPLICITLY stated in achievement titles, challenge descriptions, or execution descriptions. Examples of WRONG inferences:
+  * "COVID contact tracing" ≠ "healthcare technology expertise" or "patient data security" (contact tracing is epidemiological tracking, not healthcare systems or patient data)
+  * "Credit card tokenization at bank" ≠ "fintech expertise" (it's payment security infrastructure, not fintech products or financial services)
+  * "Trading platform infrastructure" ≠ "quantitative trading expertise" or "algorithmic trading" (infrastructure ≠ trading strategy)
+  * "Kubernetes platform" ≠ "cloud-native application development" (platform ≠ applications)
+  If an achievement describes "epidemiological contact tracing" you can say "contact tracing systems" but NOT "healthcare technology" or "patient data platforms". If an achievement describes "credit card payment tokenization" you can say "payment security" or "PCI DSS compliance" but NOT "fintech" or "financial services". Stay strictly within the technical domain explicitly described in the achievement.
 - CRITICAL SPECIFIC TOOL NAMES: NEVER claim experience with specific product/service names unless they are EXPLICITLY mentioned in the source data. This especially applies to: AWS security services (GuardDuty, AWS Config, Inspector, Security Hub, Macie, Detective, etc.), commercial security tools (Wiz, Snyk, Aqua, Prisma Cloud, Lacework, etc.), monitoring tools (DataDog, New Relic, Splunk, etc.). If the JD mentions "GuardDuty" but it's not in the achievements/skills, DO NOT include it. Use generic descriptions instead: "AWS security services", "cloud security posture management", "vulnerability scanning tools", "commercial observability platforms". You can claim experience with tool CATEGORIES if the candidate has used tools in that category, but NEVER claim specific tool names that aren't in source data.
 - CRITICAL WEAK QUANTIFICATIONS: Numbers under 10-20 are generally not impressive and should be omitted or replaced with qualitative descriptions. Apply this rule universally across ALL types of metrics:
   * Team sizes: "0 to 5 engineers" → omit or "built security team from ground up"
@@ -141,7 +161,7 @@ You MUST include ALL companies from the candidate's employment history in chrono
 - Employment history: ALL companies with 1-5 bullets each (more bullets for highly relevant roles, fewer for less relevant), ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST (2023-Present, then 2022-2023, then 2020-2022, etc.)
 - CRITICAL ROLE TITLES AND DATES: Use the EXACT role title and EXACT dates from the achievement data. Do NOT upgrade, enhance, modify, or extend role titles or dates. If the data says "Sr. DevOps/SRE" for "2017", you MUST use exactly that - NOT "Principal Platform Engineer" or "2017-2018". This is factual accuracy about employment history and any changes constitute resume fraud.
 - CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Acme Corp](https://acme.example.com)** | *Principal Engineer* | 2023-Present)
-- Focus bullets on achievements from the provided list that match JD requirements
+- CRITICAL ACHIEVEMENT SELECTION: Select achievements based on the relevance scores and reasoning provided in the JD analysis. Prioritize achievements with highest scores that demonstrate transferable technical patterns even if the domain differs. For data-heavy roles (payment processing, analytics, fintech), prioritize achievements showing distributed data systems, ETL pipelines, real-time processing, and data engineering at scale regardless of industry vertical. DO NOT exclude achievements just because domain keywords don't match - technical architecture patterns transfer across domains.
 - CRITICAL: Use ONLY metrics and claims explicitly stated in the achievement data - never fabricate, extrapolate, or infer impact
 - CRITICAL: Add blank line (\\n\\n) between each bullet point for readability
 - CRITICAL: Keep technical details (bare-metal, multi-cloud, specific technologies, architectures) - these are differentiators
@@ -257,7 +277,7 @@ You MUST include ALL companies from the candidate's employment history in chrono
 - Employment history: ALL companies with 3-5 bullets each showing most impactful achievements, ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST (2023-Present, then 2022-2023, then 2020-2022, etc.)
 - CRITICAL ROLE TITLES AND DATES: Use the EXACT role title and EXACT dates from the achievement data. Do NOT upgrade, enhance, modify, or extend role titles or dates. If the data says "Sr. DevOps/SRE" for "2017", you MUST use exactly that - NOT "Principal Platform Engineer" or "2017-2018". This is factual accuracy about employment history and any changes constitute resume fraud.
 - CRITICAL: Format company names as clickable markdown links using the COMPANY URLS mapping: **[Company Name](url)** | *Role Title* | Dates (e.g., **[Acme Corp](https://acme.example.com)** | *Principal Engineer* | 2023-Present)
-- Focus on quantifiable achievements and technical depth
+- CRITICAL ACHIEVEMENT SELECTION: Prioritize achievements demonstrating scale, complexity, and architectural sophistication. For current role (most recent company), showcase diverse technical capabilities including platform engineering, distributed systems, data engineering, security, and automation. Include achievements with strong quantifiable metrics (cost savings, performance improvements, scale metrics). Distributed data systems, real-time processing, and data engineering achievements demonstrate transferable technical depth valuable across all industries.
 - CRITICAL: Use ONLY metrics and claims explicitly stated in the achievement data - never fabricate, extrapolate, or infer impact
 - CRITICAL: Add blank line (\\n\\n) between each bullet point for readability
 - CRITICAL: Keep technical details (bare-metal, multi-cloud, specific technologies, architectures) - these are differentiators
