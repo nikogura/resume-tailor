@@ -68,7 +68,7 @@ func TestValidate(t *testing.T) {
 			config: Config{
 				Name:              "test-user",
 				AnthropicAPIKey:   "test-key",
-				SummariesLocation: os.TempDir(), // Exists
+				SummariesLocation: os.TempDir(), //nolint:usetesting // Using os.TempDir() as known existing dir path for validation test, not for file I/O
 				Pandoc: PandocConfig{
 					TemplatePath: "template.latex",
 					ClassFile:    "class.cls",
@@ -82,7 +82,7 @@ func TestValidate(t *testing.T) {
 		{
 			name: "missing API key",
 			config: Config{
-				SummariesLocation: os.TempDir(),
+				SummariesLocation: os.TempDir(), //nolint:usetesting // Using os.TempDir() as known existing dir path for validation test, not for file I/O
 				Pandoc: PandocConfig{
 					TemplatePath: "template.latex",
 					ClassFile:    "class.cls",
