@@ -163,7 +163,7 @@ func TestBuildGenerationPrompt(t *testing.T) {
 	}
 
 	// Should include years_experience rule.
-	if !strings.Contains(prompt, "use the EXACT number from profile.years_experience") {
+	if !strings.Contains(prompt, "YEARS OF EXPERIENCE") {
 		t.Error("Prompt should include years_experience rule")
 	}
 
@@ -351,7 +351,7 @@ func TestPromptsCriticalRules(t *testing.T) {
 				"Use ONLY metrics and claims explicitly stated",
 				"never fabricate",
 				"Add blank line",
-				"use the EXACT number from profile.years_experience",
+				"YEARS OF EXPERIENCE",
 				"Use the EXACT role title and EXACT dates",
 				"ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST",
 			},
@@ -372,7 +372,7 @@ func TestPromptsCriticalRules(t *testing.T) {
 				"never fabricate",
 				"Add blank line",
 				"Use the EXACT role title and EXACT dates",
-				"use the EXACT number from profile.years_experience",
+				"YEARS OF EXPERIENCE",
 				"ORDERED CHRONOLOGICALLY WITH MOST RECENT FIRST",
 			},
 		},
