@@ -102,9 +102,11 @@ func runGeneral(cmd *cobra.Command, args []string) (err error) {
 		return err
 	}
 
-	// Generate output filenames
-	resumeMD := filepath.Join(outDir, "general-resume.md")
-	resumePDF := filepath.Join(outDir, "general-resume.pdf")
+	// Generate output filenames with name
+	sanitizedName := sanitizeFilename(data.Profile.Name)
+	baseFilename := sanitizedName + "-general-resume"
+	resumeMD := filepath.Join(outDir, baseFilename+".md")
+	resumePDF := filepath.Join(outDir, baseFilename+".pdf")
 
 	if getVerbose() {
 		fmt.Println("Writing markdown file...")
