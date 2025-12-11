@@ -114,13 +114,16 @@ RESUME REQUIREMENTS:
 The professional summary MUST follow this exact structure. This is NON-NEGOTIABLE:
 
 FIRST BULLET - MUST start with: "**Principal Engineer and CIO with 25+ years of experience**" then describe relevant expertise
-FOLLOWING BULLETS - MAY use: "**[Domain from achievements] Expert**" or "**[Area from achievements] Leader**" with comprehensive details
-DO NOT write: "Proven track record", "Demonstrated ability", "Expert in modern technologies", or other generic phrases
+FOLLOWING BULLETS - MAY use these patterns:
+  - "**[Domain] Expert**" or "**[Domain] Leader**" or "**[Domain] Architect**" - for strong domain positioning
+  - "**Deep Experience in [Domain/Technology]**" - for breadth + depth without narrow positioning
+DO NOT write: "Proven track record", "Demonstrated ability", "Expert in modern technologies", "Specialist" (too narrow), or other generic phrases
 DO write: Specific role title + specific achievements + specific scale metrics relevant to THIS job
 
 Example - DO NOT COPY - DERIVE FROM ACTUAL DATA:
 • **Principal Engineer and CIO with 25+ years of experience** building [specific systems from achievements relevant to JD] across [specific domains from achievements]
-• **[Domain matching JD requirements] Expert** specializing in [specific tech stack from achievements] with proven [specific metrics from achievements]
+• **[Domain matching JD requirements] Expert** specializing in [specific tech stack from achievements] with [specific metrics from achievements]
+• **Deep Experience in [Domain/Technology from achievements]** building [specific systems/platforms] achieving [specific metrics and scale]
 
 If you write generic marketing speak like "Proven track record" or "Demonstrated ability" the resume will be REJECTED.
 If you do NOT start with "Principal Engineer and CIO with 25+ years of experience" the resume will be REJECTED.

@@ -58,6 +58,7 @@ type GeneralResumeRequest struct {
 	Skills       map[string]interface{}   `json:"skills"`
 	Projects     []map[string]interface{} `json:"projects"`
 	CompanyURLs  map[string]string        `json:"company_urls"`
+	Focus        string                   `json:"focus"` // "ic", "leadership", or "balanced"
 }
 
 // GeneralResumeResponse represents the response for a general resume.

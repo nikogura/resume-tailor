@@ -21,6 +21,9 @@ var generalOutputDir string
 var generalKeepMarkdown bool
 
 //nolint:gochecknoglobals // Cobra boilerplate
+var generalFocus string
+
+//nolint:gochecknoglobals // Cobra boilerplate
 var generalCmd = &cobra.Command{
 	Use:   "general",
 	Short: "Generate a comprehensive general resume",
@@ -30,9 +33,15 @@ while keeping the output at or under 3 pages when rendered to PDF.
 This creates a non-tailored resume suitable for general distribution or as a
 master resume document.
 
+Use --focus to create IC-focused or leadership-focused variants:
+  --focus ic: Emphasizes hands-on technical work, architecture, implementation
+  --focus leadership: Emphasizes team building, strategic initiatives, organizational impact
+  --focus balanced: Balanced technical + leadership (default)
+
 Example:
   resume-tailor general
-  resume-tailor general --output-dir ~/Documents`,
+  resume-tailor general --focus ic
+  resume-tailor general --focus leadership --output-dir ~/Documents`,
 	RunE: runGeneral,
 }
 
@@ -41,6 +50,7 @@ func init() {
 	rootCmd.AddCommand(generalCmd)
 	generalCmd.Flags().StringVar(&generalOutputDir, "output-dir", "", "Output directory (default from config)")
 	generalCmd.Flags().BoolVar(&generalKeepMarkdown, "keep-markdown", false, "Keep markdown files after PDF generation")
+	generalCmd.Flags().StringVar(&generalFocus, "focus", "balanced", "Resume focus: ic, leadership, or balanced (default)")
 }
 
 func runGeneral(cmd *cobra.Command, args []string) (err error) {
@@ -56,14 +66,18 @@ func runGeneral(cmd *cobra.Command, args []string) (err error) {
 		return err
 	}
 
-	// Use output dir from flag or config
-	outDir := generalOutputDir
-	if outDir == "" {
-		outDir = cfg.Defaults.OutputDir
+	// Validate focus parameter
+	err = validateFocus(generalFocus)
+	if err != nil {
+		return err
 	}
+
+	// Use output dir from flag or config
+	outDir := getOutputDir(generalOutputDir, cfg.Defaults.OutputDir)
 
 	if getVerbose() {
 		fmt.Printf("Loading summaries from: %s\n", cfg.SummariesLocation)
+		fmt.Printf("Focus: %s\n", generalFocus)
 	}
 
 	// Load summaries
@@ -79,41 +93,85 @@ func runGeneral(cmd *cobra.Command, args []string) (err error) {
 		fmt.Println("Generating comprehensive general resume...")
 	}
 
+	// Generate general resume
+	var genResp llm.GeneralResumeResponse
+	genResp, err = generateGeneralResume(ctx, cfg.AnthropicAPIKey, data, generalFocus)
+	if err != nil {
+		return err
+	}
+
+	// Generate output filenames
+	var resumeMD, resumePDF string
+	resumeMD, resumePDF = buildGeneralFilenames(data.Profile.Name, generalFocus, outDir)
+
+	// Write and render
+	err = writeAndRenderGeneral(genResp.Resume, resumeMD, resumePDF, cfg.Pandoc.TemplatePath, cfg.Pandoc.ClassFile)
+	return err
+}
+
+func validateFocus(focus string) (err error) {
+	validFocus := map[string]bool{"ic": true, "leadership": true, "balanced": true}
+	if !validFocus[focus] {
+		err = fmt.Errorf("invalid focus value '%s': must be 'ic', 'leadership', or 'balanced'", focus)
+		return err
+	}
+	return err
+}
+
+func getOutputDir(flagValue, configValue string) (outDir string) {
+	outDir = flagValue
+	if outDir == "" {
+		outDir = configValue
+	}
+	return outDir
+}
+
+func generateGeneralResume(ctx context.Context, apiKey string, data summaries.Data, focus string) (genResp llm.GeneralResumeResponse, err error) {
 	// Convert achievements to maps for JSON
 	achievementMaps := make([]map[string]interface{}, len(data.Achievements))
 	for i, achievement := range data.Achievements {
 		achievementMaps[i] = achievementToMap(achievement)
 	}
 
-	// Generate general resume
-	client := llm.NewClient(cfg.AnthropicAPIKey)
+	client := llm.NewClient(apiKey)
 	genReq := llm.GeneralResumeRequest{
 		Achievements: achievementMaps,
 		Profile:      profileToMap(data.Profile),
 		Skills:       skillsToMap(data.Skills),
 		Projects:     projectsToMaps(data.OpensourceProjects),
 		CompanyURLs:  data.CompanyURLs,
+		Focus:        focus,
 	}
 
-	var genResp llm.GeneralResumeResponse
 	genResp, err = client.GenerateGeneral(ctx, genReq)
 	if err != nil {
 		err = errors.Wrap(err, "Claude API generation failed")
-		return err
+		return genResp, err
 	}
 
-	// Generate output filenames with name
-	sanitizedName := sanitizeFilename(data.Profile.Name)
-	baseFilename := sanitizedName + "-general-resume"
-	resumeMD := filepath.Join(outDir, baseFilename+".md")
-	resumePDF := filepath.Join(outDir, baseFilename+".pdf")
+	return genResp, err
+}
 
+func buildGeneralFilenames(name, focus, outDir string) (resumeMD, resumePDF string) {
+	sanitizedName := sanitizeFilename(name)
+	baseFilename := sanitizedName + "-general"
+	// Add focus to filename if not balanced
+	if focus != "balanced" {
+		baseFilename += "-" + focus
+	}
+	baseFilename += "-resume"
+	resumeMD = filepath.Join(outDir, baseFilename+".md")
+	resumePDF = filepath.Join(outDir, baseFilename+".pdf")
+	return resumeMD, resumePDF
+}
+
+func writeAndRenderGeneral(resume, resumeMD, resumePDF, templatePath, classPath string) (err error) {
 	if getVerbose() {
 		fmt.Println("Writing markdown file...")
 	}
 
 	// Write markdown file (unescape newlines that Claude may have escaped)
-	resumeContent := unescapeNewlines(genResp.Resume)
+	resumeContent := unescapeNewlines(resume)
 	err = renderer.WriteMarkdown(resumeContent, resumeMD)
 	if err != nil {
 		err = errors.Wrap(err, "failed to write resume markdown")
@@ -124,7 +182,7 @@ func runGeneral(cmd *cobra.Command, args []string) (err error) {
 		fmt.Println("Rendering PDF...")
 	}
 
-	err = renderAndCleanupGeneral(resumeMD, resumePDF, cfg.Pandoc.TemplatePath, cfg.Pandoc.ClassFile)
+	err = renderAndCleanupGeneral(resumeMD, resumePDF, templatePath, classPath)
 	return err
 }
 
