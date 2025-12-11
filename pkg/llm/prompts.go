@@ -108,9 +108,28 @@ COMPANY URLS:
 Generate a tailored resume and cover letter in markdown format.
 
 RESUME REQUIREMENTS:
+
+**STOP - READ THIS FIRST - PROFESSIONAL SUMMARY FORMAT IS MANDATORY:**
+
+The professional summary MUST follow this exact structure. This is NON-NEGOTIABLE:
+
+FIRST BULLET - MUST start with: "**Principal Engineer and CIO with 25+ years of experience**" then describe relevant expertise
+FOLLOWING BULLETS - MAY use: "**[Domain from achievements] Expert**" or "**[Area from achievements] Leader**" with comprehensive details
+DO NOT write: "Proven track record", "Demonstrated ability", "Expert in modern technologies", or other generic phrases
+DO write: Specific role title + specific achievements + specific scale metrics relevant to THIS job
+
+Example - DO NOT COPY - DERIVE FROM ACTUAL DATA:
+• **Principal Engineer and CIO with 25+ years of experience** building [specific systems from achievements relevant to JD] across [specific domains from achievements]
+• **[Domain matching JD requirements] Expert** specializing in [specific tech stack from achievements] with proven [specific metrics from achievements]
+
+If you write generic marketing speak like "Proven track record" or "Demonstrated ability" the resume will be REJECTED.
+If you do NOT start with "Principal Engineer and CIO with 25+ years of experience" the resume will be REJECTED.
+
 - Header: Use raw LaTeX centering: \begin{center} on first line, then {\Large\bfseries Name} for centered name, then location, then all links on ONE line using LaTeX href format: \href{url}{GitHub} | \href{url}{LinkedIn} | \href{url}{Website}, then motto using LaTeX \textit{} command (example: \textit{Aut viam inveniam, aut faciam (I will find a way, or I will make one)}), then \end{center}. CRITICAL: Do NOT use markdown asterisks for the motto - use LaTeX \textit{} only.
 
-**CRITICAL - YEARS OF EXPERIENCE - READ THIS FIRST:**
+- Professional summary: 3-5 bullet points following the mandatory format above, highlighting most relevant experience for THIS role
+
+**CRITICAL - YEARS OF EXPERIENCE:**
 The profile.years_experience field contains the ONLY acceptable number for years of experience. For this candidate, profile.years_experience = 25. You MUST use EXACTLY "25+ years" in the professional summary. NEVER write "30+ years", "over 25 years", "nearly 30 years", "approaching 30 years", or ANY other number. The ONLY acceptable phrases are "25+ years" or "25 years". Examples:
 - WRONG: "30+ years of engineering leadership"
 - WRONG: "30+ years of technical training"
@@ -133,7 +152,6 @@ WRONG: Changing "Sr. DevOps/SRE" to "Senior DevOps Engineer"
 RIGHT: Using the EXACT company, role, and dates from the achievement data
 Each company-role-date combination is unique and must not be mixed with other companies. This is employment history accuracy and errors constitute resume fraud.
 
-- Professional summary: 3-5 bullet points highlighting most relevant experience for THIS role (NOT a paragraph)
 - CRITICAL PROFESSIONAL SUMMARY ANTI-HALLUCINATION: The Professional Summary MUST contain ONLY experience, technologies, frameworks, certifications, and compliance standards that are EXPLICITLY present in the candidate's achievement data, skills data, or profile. DO NOT claim experience with technologies just because they appear in the job description. Examples: If the JD mentions "ISO 27001" or "NIST 800-53" but the candidate data does not, DO NOT claim compliance framework experience. If the JD mentions "Kotlin" but it's not in the skills list, DO NOT claim Kotlin experience. Focus on what the candidate HAS done that's relevant, not what the JD wants. This is a hard requirement for truthfulness.
 - CRITICAL DOMAIN EXPERTISE FABRICATION: DO NOT infer broad domain expertise from narrow technical achievements or keyword pattern matching. Each domain term in professional summary must be EXPLICITLY stated in achievement titles, challenge descriptions, or execution descriptions. Examples of WRONG inferences:
   * "COVID contact tracing" ≠ "healthcare technology expertise" or "patient data security" (contact tracing is epidemiological tracking, not healthcare systems or patient data)
@@ -214,6 +232,61 @@ func buildGeneralResumePrompt(req GeneralResumeRequest) (prompt string) {
 	projectsJSON, _ := json.MarshalIndent(req.Projects, "", "  ")
 	companyURLsJSON, _ := json.MarshalIndent(req.CompanyURLs, "", "  ")
 
+	// Build focus-specific guidance
+	focusGuidance := buildFocusGuidance(req.Focus)
+
+	prompt = buildGeneralPromptTemplate(string(profileJSON), string(achievementsJSON),
+		string(skillsJSON), string(projectsJSON),
+		string(companyURLsJSON), req.Focus, focusGuidance)
+
+	return prompt
+}
+
+func buildFocusGuidance(focus string) (guidance string) {
+	switch focus {
+	case "ic":
+		guidance = `This is an IC (Individual Contributor) focused resume emphasizing hands-on technical work and deep technical expertise.
+- Professional Summary: Emphasize technical depth, architecture skills, and hands-on implementation. Focus on technologies mastered, systems built, and technical problems solved.
+- Avoid management terminology: Do NOT emphasize "leading teams", "managing people", "building organizations". Instead focus on "architected", "designed", "implemented", "built", "solved".
+- Achievement Selection: Prioritize achievements showing technical depth, complex architecture, hands-on problem-solving, and individual technical contributions.
+- Downplay or omit: Team building, hiring, organizational transformation, strategic initiatives (unless they directly resulted in technical systems you built).
+- Emphasize: System design, code written, technologies mastered, technical challenges solved, performance optimizations, architectural innovations.`
+	case "leadership":
+		guidance = `This is a Leadership/Management focused resume emphasizing strategic impact, team building, and organizational transformation.
+- Professional Summary: Emphasize leadership experience, team building, strategic initiatives, and organizational impact. Focus on teams built, organizations transformed, and strategic programs delivered.
+- Include management terminology: "founded teams", "led initiatives", "established standards", "scaled organizations", "mentored engineers".
+- Achievement Selection: Prioritize achievements showing leadership impact, team building, cross-functional collaboration, strategic planning, and organizational transformation.
+- Emphasize: Teams built from ground up, organizational frameworks established, strategic initiatives led, cross-team collaboration, mentoring and knowledge transfer.
+- Balance: Still include technical depth to show credibility, but frame it in context of leadership and strategic impact.`
+	default: // balanced
+		guidance = `This is a balanced resume showing both technical depth (IC skills) and leadership capabilities.
+
+CRITICAL PROFESSIONAL SUMMARY FORMATTING:
+- First bullet MUST use actual role titles: "Principal Engineer and CIO", "Staff Engineer", "Lead Engineer" - establish credibility with real titles
+- Following bullets MAY use descriptive positioning based on achievements: "[Domain] Expert", "[Area] Leader", "[Capability] Specialist" - but ONLY if strongly evidenced in achievement data
+- Descriptive positioning must be derived FROM achievements, not invented: if achievements show platform engineering across multiple companies, can say "Platform Engineering Expert"; if achievements show security team founding + WAF + compliance work, can say "Security and Compliance Leader"
+- Make bullets SUBSTANTIAL and COMPREHENSIVE - include full scope of experience, technologies, scale metrics, and domain expertise
+- Each bullet should tell a complete story of capability - don't artificially limit length
+- Strong positioning words ("Expert", "Leader", "Specialist") require strong evidence: multiple achievements, years of experience, significant scale
+- Include "25+ years of experience" (full phrase) in first bullet for completeness
+
+Example format (DO NOT COPY - derive from actual achievements):
+• **Principal Engineer and CIO with 25+ years of experience** [comprehensive description of systems, platforms, infrastructure types, and industries from achievement data]
+
+• **[Primary Technical Domain from achievements] Expert** specializing in [specific technologies from achievements] with proven track record [specific scale metrics from achievements]
+
+• **[Secondary Domain from achievements] Leader** with deep expertise in [specific capabilities from achievements] having [specific accomplishments from achievements]
+
+• **[Third capability area from achievements]** and [qualification from achievements] creating [specific deliverables from achievements] adopted across multiple organizations
+
+• **[Fourth area from achievements]** across diverse domains including [specific examples from achievements with scale/impact metrics]
+
+Achievement Selection: Mix of technical depth (architecture, implementation) and leadership impact (team building, organizational transformation).`
+	}
+	return guidance
+}
+
+func buildGeneralPromptTemplate(profileJSON, achievementsJSON, skillsJSON, projectsJSON, companyURLsJSON, focus, focusGuidance string) (prompt string) {
 	prompt = fmt.Sprintf(`You are an expert resume writer creating a comprehensive general resume.
 
 CANDIDATE PROFILE:
@@ -261,6 +334,9 @@ Each company-role-date combination is unique and must not be mixed with other co
 
 - Professional summary: 3-5 bullet points highlighting breadth and depth of experience
 - CRITICAL PROFESSIONAL SUMMARY ANTI-HALLUCINATION: The Professional Summary MUST contain ONLY experience, technologies, frameworks, certifications, and compliance standards that are EXPLICITLY present in the candidate's achievement data, skills data, or profile. DO NOT invent or infer experience with technologies, compliance frameworks, certifications, or methodologies not in the candidate data. Focus on what the candidate HAS done, not what sounds impressive. This is a hard requirement for truthfulness.
+
+**FOCUS-SPECIFIC GUIDANCE (Focus: %s):**
+%s
 - CRITICAL SPECIFIC TOOL NAMES: NEVER claim experience with specific product/service names unless they are EXPLICITLY mentioned in the source data. This especially applies to: AWS security services (GuardDuty, AWS Config, Inspector, Security Hub, Macie, Detective, etc.), commercial security tools (Wiz, Snyk, Aqua, Prisma Cloud, Lacework, etc.), monitoring tools (DataDog, New Relic, Splunk, etc.). If the JD mentions "GuardDuty" but it's not in the achievements/skills, DO NOT include it. Use generic descriptions instead: "AWS security services", "cloud security posture management", "vulnerability scanning tools", "commercial observability platforms". You can claim experience with tool CATEGORIES if the candidate has used tools in that category, but NEVER claim specific tool names that aren't in source data.
 - CRITICAL WEAK QUANTIFICATIONS: Numbers under 10-20 are generally not impressive and should be omitted or replaced with qualitative descriptions. Apply this rule universally across ALL types of metrics:
   * Team sizes: "0 to 5 engineers" → omit or "built security team from ground up"
@@ -300,9 +376,9 @@ Return ONLY valid JSON in this exact format (no markdown, no commentary):
 }
 
 CRITICAL: Ensure all JSON strings are properly escaped. Use \\n for newlines, \\" for quotes.`,
-		string(profileJSON), string(achievementsJSON),
-		string(skillsJSON), string(projectsJSON),
-		string(companyURLsJSON))
+		profileJSON, achievementsJSON,
+		skillsJSON, projectsJSON,
+		companyURLsJSON, focus, focusGuidance)
 
 	return prompt
 }
