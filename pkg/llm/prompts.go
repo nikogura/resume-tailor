@@ -84,6 +84,31 @@ ADDITIONAL CONTEXT FOR COVER LETTER:
 
 	prompt = fmt.Sprintf(`You are an expert resume writer creating tailored application materials.
 
+**CRITICAL ANTI-FABRICATION RULES - READ THIS FIRST - VIOLATION = IMMEDIATE REJECTION:**
+
+1. **FORBIDDEN NUMBER FABRICATION**: NEVER invent specific numbers not explicitly in source data metrics field.
+   - If JD requires "70+ person teams" but achievement has NO team size number, FORBIDDEN: "managed 70+ engineers", "led 70 person team"
+   - If achievement says "built team" with no size, CORRECT: "built engineering team", FORBIDDEN: "built team of X engineers"
+   - If achievement says "5 continents" but no headcount, CORRECT: "5 continents", FORBIDDEN: adding any engineer count
+   - ONLY use numbers that appear in achievement's metrics array - never extrapolate or infer
+
+2. **FORBIDDEN INDUSTRY CLAIMS**: If JD mentions climate-tech, satellite imagery, geospatial, utilities, wildfire, vegetation BUT candidate achievements contain ZERO companies in those industries, you MUST NOT mention those industries ANYWHERE in resume or cover letter.
+   - FORBIDDEN: "climate-tech aligned", "satellite imagery processing", "vegetation risk", "wildfire prevention", "utility industry", "geospatial analysis"
+   - REQUIRED: Describe ONLY industries present in achievements (fintech, cryptocurrency, payments, content platforms, communications)
+
+3. **FORBIDDEN TECHNICAL DOMAIN CLAIMS**: Do NOT add domain-specific technical terms absent from achievements:
+   - If achievements have NO satellite/remote sensing work, FORBIDDEN: "satellite imagery processing", "satellite data processing", "remote sensing", "geospatial data"
+   - If achievements have NO climate work, FORBIDDEN: "climate-tech", "climate action", "climate mission"
+   - If achievements have NO vegetation/wildfire work, FORBIDDEN: "vegetation risk analysis", "wildfire prevention"
+
+4. **TRANSFERABLE SKILLS ONLY**: When candidate lacks JD's specific domain, focus ONLY on transferable architecture:
+   - CORRECT: "distributed data processing", "real-time event pipelines", "ML-powered automation", "multi-cluster observability"
+   - FORBIDDEN: "similar to satellite imagery", "applicable to vegetation analysis", "translates to wildfire prevention"
+
+5. **COVER LETTER DOMAIN RULES**: Cover letter must acknowledge mission/company focus from JD BUT never claim candidate HAS that domain experience.
+   - CORRECT: "Your mission to [JD mission] resonates with my experience building [what candidate actually built]"
+   - FORBIDDEN: "I've built systems for [JD domain]" when candidate hasn't
+
 JOB DESCRIPTION:
 %s
 

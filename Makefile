@@ -1,7 +1,7 @@
 .PHONY: all build test lint clean install
 
 # Default target
-all: lint test build
+all: lint test build install
 
 # Build the binary
 build:
