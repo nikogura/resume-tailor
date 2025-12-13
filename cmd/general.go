@@ -49,7 +49,7 @@ Example:
 func init() {
 	rootCmd.AddCommand(generalCmd)
 	generalCmd.Flags().StringVar(&generalOutputDir, "output-dir", "", "Output directory (default from config)")
-	generalCmd.Flags().BoolVar(&generalKeepMarkdown, "keep-markdown", false, "Keep markdown files after PDF generation")
+	generalCmd.Flags().BoolVar(&generalKeepMarkdown, "keep-markdown", true, "Keep markdown files after PDF generation")
 	generalCmd.Flags().StringVar(&generalFocus, "focus", "balanced", "Resume focus: ic, leadership, or balanced (default)")
 }
 

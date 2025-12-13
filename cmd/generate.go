@@ -58,7 +58,7 @@ func init() {
 	generateCmd.Flags().StringVar(&company, "company", "", "Company name (extracted from JD if not provided)")
 	generateCmd.Flags().StringVar(&role, "role", "", "Role title (extracted from JD if not provided)")
 	generateCmd.Flags().StringVar(&outputDir, "output-dir", "", "Output directory (default from config)")
-	generateCmd.Flags().BoolVar(&keepMarkdown, "keep-markdown", false, "Keep markdown files after PDF generation")
+	generateCmd.Flags().BoolVar(&keepMarkdown, "keep-markdown", true, "Keep markdown files after PDF generation")
 	generateCmd.Flags().StringVar(&coverLetterContext, "context", "", "Additional context for cover letter generation")
 }
 
@@ -130,7 +130,7 @@ func runGenerate(cmd *cobra.Command, args []string) (err error) {
 	}
 
 	// Write and render output files
-	err = writeAndRenderOutput(genResp, outDir, cfg.Name, finalCompany, finalRole, cfg.Pandoc.TemplatePath, cfg.Pandoc.ClassFile)
+	err = writeAndRenderOutput(genResp, jobDescription, outDir, cfg.Name, finalCompany, finalRole, cfg.Pandoc.TemplatePath, cfg.Pandoc.ClassFile)
 	return err
 }
 
@@ -194,7 +194,7 @@ func runGenerationPhase(ctx context.Context, client *llm.Client, jobDescription,
 	return genResp, err
 }
 
-func writeAndRenderOutput(genResp llm.GenerationResponse, outDir, name, company, role, templatePath, classPath string) (err error) {
+func writeAndRenderOutput(genResp llm.GenerationResponse, jobDescription, outDir, name, company, role, templatePath, classPath string) (err error) {
 	// Generate output filenames: name-company-role-{resume,cover}.pdf
 	sanitizedName := sanitizeFilename(name)
 	sanitizedCompany := sanitizeFilename(company)
@@ -211,9 +211,17 @@ func writeAndRenderOutput(genResp llm.GenerationResponse, outDir, name, company,
 	resumePDF := filepath.Join(outDir, baseFilename+"-resume.pdf")
 	coverMD := filepath.Join(outDir, baseFilename+"-cover.md")
 	coverPDF := filepath.Join(outDir, baseFilename+"-cover.pdf")
+	jdTXT := filepath.Join(outDir, baseFilename+"-jd.txt")
 
 	if getVerbose() {
 		fmt.Println("Writing markdown files...")
+	}
+
+	// Write job description text file
+	err = os.WriteFile(jdTXT, []byte(jobDescription), 0644)
+	if err != nil {
+		err = errors.Wrap(err, "failed to write job description file")
+		return err
 	}
 
 	// Write markdown files
