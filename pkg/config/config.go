@@ -159,13 +159,14 @@ func InitConfig(configPath string) (err error) {
 	defaultConfig := Config{
 		Name:              "your-name",
 		AnthropicAPIKey:   "sk-ant-api03-...",
-		SummariesLocation: filepath.Join(homeDir, "Documents", "nikogura.com", "summaries", "structured-summaries.json"),
+		SummariesLocation: filepath.Join(homeDir, ".resume-tailor", "structured-summaries.json"),
+		CompleteResumeURL: "",
 		Pandoc: PandocConfig{
-			TemplatePath: filepath.Join(homeDir, "Documents", "nikogura.com", "resume-template.latex"),
-			ClassFile:    filepath.Join(homeDir, "Documents", "nikogura.com", "resume.cls"),
+			TemplatePath: filepath.Join(homeDir, ".resume-tailor", "resume-template.latex"),
+			ClassFile:    filepath.Join(homeDir, ".resume-tailor", "resume.cls"),
 		},
 		Defaults: DefaultConfig{
-			OutputDir: "./applications",
+			OutputDir: filepath.Join(homeDir, "Documents", "Applications"),
 		},
 	}
 

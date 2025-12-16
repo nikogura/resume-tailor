@@ -155,45 +155,39 @@ RESUME REQUIREMENTS:
 
 The professional summary MUST follow this exact structure. This is NON-NEGOTIABLE:
 
-FIRST BULLET - MUST start with: "**Principal Engineer and CIO with 25+ years of experience**" then describe relevant expertise
+FIRST BULLET - MUST start with actual role titles from profile plus years of experience: "**[Actual Role Titles from profile] with [X]+ years of experience**" then describe relevant expertise
 FOLLOWING BULLETS - MAY use these patterns:
   - "**[Domain] Expert**" or "**[Domain] Leader**" or "**[Domain] Architect**" - for strong domain positioning
   - "**Deep Experience in [Domain/Technology]**" - for breadth + depth without narrow positioning
 DO NOT write: "Proven track record", "Demonstrated ability", "Expert in modern technologies", "Specialist" (too narrow), or other generic phrases
 DO write: Specific role title + specific achievements + specific scale metrics relevant to THIS job
 
-Example - DO NOT COPY - DERIVE FROM ACTUAL DATA:
-• **Principal Engineer and CIO with 25+ years of experience** building [specific systems from achievements relevant to JD] across [specific domains from achievements]
+Example format (DO NOT COPY - DERIVE FROM ACTUAL PROFILE DATA):
+• **[Role titles from profile.role_titles] with [profile.years_experience]+ years of experience** building [specific systems from achievements relevant to JD] across [specific domains from achievements]
 • **[Domain matching JD requirements] Expert** specializing in [specific tech stack from achievements] with [specific metrics from achievements]
 • **Deep Experience in [Domain/Technology from achievements]** building [specific systems/platforms] achieving [specific metrics and scale]
 
 If you write generic marketing speak like "Proven track record" or "Demonstrated ability" the resume will be REJECTED.
-If you do NOT start with "Principal Engineer and CIO with 25+ years of experience" the resume will be REJECTED.
+If you do NOT start with role titles and years of experience from the profile data, the resume will be REJECTED.
 
 - Header: Use raw LaTeX centering: \begin{center} on first line, then {\Large\bfseries Name} for centered name, then location, then all links on ONE line using LaTeX href format: \href{url}{GitHub} | \href{url}{LinkedIn} | \href{url}{Website}, then motto using LaTeX \textit{} command (example: \textit{Aut viam inveniam, aut faciam (I will find a way, or I will make one)}), then \end{center}. CRITICAL: Do NOT use markdown asterisks for the motto - use LaTeX \textit{} only.
 
 - Professional summary: 3-5 bullet points following the mandatory format above, highlighting most relevant experience for THIS role
 
 **CRITICAL - YEARS OF EXPERIENCE:**
-The profile.years_experience field contains the ONLY acceptable number for years of experience. For this candidate, profile.years_experience = 25. You MUST use EXACTLY "25+ years" in the professional summary. NEVER write "30+ years", "over 25 years", "nearly 30 years", "approaching 30 years", or ANY other number. The ONLY acceptable phrases are "25+ years" or "25 years". Examples:
-- WRONG: "30+ years of engineering leadership"
-- WRONG: "30+ years of technical training"
-- WRONG: "over 25 years of experience"
-- RIGHT: "25+ years of software engineering"
-- RIGHT: "25+ years of infrastructure experience"
-This is factual accuracy. Writing any number except 25 is lying on the resume and will cause immediate rejection.
+The profile.years_experience field contains the ONLY acceptable number for years of experience. You MUST use EXACTLY the number from profile.years_experience followed by "+ years" in the professional summary. NEVER round up, estimate, or modify this number. If profile.years_experience = 25, write "25+ years". If it's 10, write "10+ years". Examples:
+- WRONG: Using a different number than what's in profile.years_experience
+- WRONG: "over [X] years of experience"
+- WRONG: "nearly [X+5] years"
+- RIGHT: "[profile.years_experience]+ years of software engineering"
+- RIGHT: "[profile.years_experience]+ years of infrastructure experience"
+This is factual accuracy. Writing any number different from profile.years_experience is lying on the resume and will cause immediate rejection.
 
 **CRITICAL - COMPANY/ROLE/DATE ACCURACY - READ THIS SECOND:**
-Each achievement in the source data has EXACT company name, role title, and dates. You MUST use these EXACTLY as provided. DO NOT mix dates between companies. DO NOT modify role titles. DO NOT extend date ranges. Examples from this candidate's actual data:
-- Terrace: "CIO & Director of Infrastructure and Security" | 2023-Present
-- Amazon Web Services: "Systems Development Engineer, Senior DevOps Consultant" | 2022-2023
-- Orion Labs: "Head of Infrastructure, Principal Engineer" | 2020-2022
-- Scribd: "Principal DevSecOps Engineer" | 2018-2020
-- Apple: "Lead DevOps Engineer" | 2015-2017
-- Stitch Fix: "Sr. DevOps/SRE" | 2017
-WRONG: Putting Scribd at 2020-2022 (that was Orion Labs)
-WRONG: Putting Orion Labs at 2016-2017 (that was overlapping with Apple)
-WRONG: Changing "Sr. DevOps/SRE" to "Senior DevOps Engineer"
+Each achievement in the source data has EXACT company name, role title, and dates. You MUST use these EXACTLY as provided. DO NOT mix dates between companies. DO NOT modify role titles. DO NOT extend date ranges.
+WRONG: Mixing up which dates go with which company
+WRONG: Modifying role titles to sound better
+WRONG: Extending or changing date ranges
 RIGHT: Using the EXACT company, role, and dates from the achievement data
 Each company-role-date combination is unique and must not be mixed with other companies. This is employment history accuracy and errors constitute resume fraud.
 
@@ -205,10 +199,10 @@ Each company-role-date combination is unique and must not be mixed with other co
   * "Kubernetes platform" ≠ "cloud-native application development" (platform ≠ applications)
   If an achievement describes "epidemiological contact tracing" you can say "contact tracing systems" but NOT "healthcare technology" or "patient data platforms". If an achievement describes "credit card payment tokenization" you can say "payment security" or "PCI DSS compliance" but NOT "fintech" or "financial services". Stay strictly within the technical domain explicitly described in the achievement.
   * CRITICAL ROLE/TITLE FABRICATION: DO NOT infer professional roles or titles from activities. Managing technical programs ≠ "Technical Program Manager" or "TPM leader". Leading a team ≠ claiming a management title. Examples of WRONG inferences:
-    - "Led Apple Pay China launch managing 30k servers" ≠ "Technical Program Manager" (actual title was "Lead DevOps Engineer")
-    - "Founded security team" ≠ "Security Executive" or "CISO" (actual title was "Principal DevSecOps Engineer")
+    - "Led major product launch managing infrastructure" ≠ "Technical Program Manager" (if actual title was IC role like "Lead Engineer")
+    - "Founded security team" ≠ "Security Executive" or "CISO" (if actual title was IC role like "Principal Engineer")
   * CRITICAL INFRASTRUCTURE VS APPLICATION DOMAIN EXPERTISE: DO NOT claim application domain expertise from infrastructure/DevOps work supporting that domain. Infrastructure engineers support applications but don't design business logic. Examples of WRONG inferences:
-    - "DevOps for Apple Pay payment systems" ≠ "Payment Platform Expert" or "Card Platform Expert" (infrastructure supporting payment apps ≠ payment application design)
+    - "DevOps for payment systems" ≠ "Payment Platform Expert" or "Card Platform Expert" (infrastructure supporting payment apps ≠ payment application design)
     - "Infrastructure for trading platform" ≠ "Trading Systems Expert" (infrastructure ≠ trading logic)
     - "Security infrastructure for healthcare" ≠ "Healthcare IT Expert" (security infrastructure ≠ clinical systems)
     - RIGHT framing: "Infrastructure and DevOps supporting payment processing systems", "Platform engineering for financial services", "Security infrastructure for regulated environments"
@@ -226,8 +220,8 @@ Each company-role-date combination is unique and must not be mixed with other co
   * Weak numbers to remove: 7 clusters, 5 engineers, 3 regions, 8 customers, 2 weeks, single-digit percentages
   * If you can't make a strong quantitative claim (20+, large percentage, significant dollar amount), make a qualitative one instead
   * NEVER use weak numbers in professional summary - it undermines credibility
-- CRITICAL TEMPORAL IMPOSSIBILITY: NEVER claim X years of experience with a specific technology/tool if that tool didn't exist for X years. Example: Do NOT say "25+ years with Terraform" when Terraform was first released in 2014. Instead say "25+ years of infrastructure automation experience with expertise in Terraform" or "Deep expertise in Terraform across multi-cloud environments"
-- CRITICAL MISLEADING JUXTAPOSITION: Do NOT combine unrelated achievements in the same sentence in a way that implies false connections. Example: If candidate managed 30,000 servers at Apple (2015-2017, pre-Kubernetes era) and has Kubernetes expertise from later roles, DO NOT write "Expert in Kubernetes with proven track record managing 30,000+ servers" - this falsely implies the servers were managed with Kubernetes. Instead, separate the claims: "Expert in Kubernetes and distributed systems" in one bullet, "Managed global infrastructure of 30,000+ servers for Apple Pay" in another bullet. Each achievement must stand alone with its correct context.
+- CRITICAL TEMPORAL IMPOSSIBILITY: NEVER claim X years of experience with a specific technology/tool if that tool didn't exist for X years. Example: Do NOT say "[X]+ years with Terraform" when Terraform was first released in 2014 and the candidate has [X]+ total years. Instead say "[X]+ years of infrastructure automation experience with expertise in Terraform" or "Deep expertise in Terraform across multi-cloud environments"
+- CRITICAL MISLEADING JUXTAPOSITION: Do NOT combine unrelated achievements in the same sentence in a way that implies false connections. Example: If candidate managed large infrastructure at Company A (2015-2017, pre-Kubernetes era) and has Kubernetes expertise from later roles, DO NOT write "Expert in Kubernetes with proven track record managing [large number]+ servers" - this falsely implies the servers were managed with Kubernetes. Instead, separate the claims: "Expert in Kubernetes and distributed systems" in one bullet, "Managed global infrastructure of [number]+ servers at Company A" in another bullet. Each achievement must stand alone with its correct context and timeframe.
 
 **CRITICAL - NO EMPLOYMENT GAPS:**
 You MUST include ALL companies from the candidate's employment history in chronological order to avoid gaps in the timeline. NEVER skip a company entirely, as this creates unexplained gaps in work history that raise red flags with hiring managers. Even if a company's achievements are low-ranked for this specific role, include at least a brief 1-2 bullet entry to maintain timeline continuity. For example, if the candidate has companies at 2023-Present, 2022-2023, 2020-2022, 2018-2020, 2017, 2015-2017, and 2007-2014, ALL must be present in that exact order. Omitting any company (like skipping 2015-2017) creates a suspicious 3-year gap. Include every company, prioritizing more detailed bullets for highly-relevant companies and briefer bullets for less-relevant ones, but NEVER omit any company entirely.
@@ -379,16 +373,10 @@ The profile.years_experience field contains the ONLY acceptable number for years
 This is factual accuracy. Writing any number except 25 is lying on the resume and will cause immediate rejection.
 
 **CRITICAL - COMPANY/ROLE/DATE ACCURACY - READ THIS SECOND:**
-Each achievement in the source data has EXACT company name, role title, and dates. You MUST use these EXACTLY as provided. DO NOT mix dates between companies. DO NOT modify role titles. DO NOT extend date ranges. Examples from this candidate's actual data:
-- Terrace: "CIO & Director of Infrastructure and Security" | 2023-Present
-- Amazon Web Services: "Systems Development Engineer, Senior DevOps Consultant" | 2022-2023
-- Orion Labs: "Head of Infrastructure, Principal Engineer" | 2020-2022
-- Scribd: "Principal DevSecOps Engineer" | 2018-2020
-- Apple: "Lead DevOps Engineer" | 2015-2017
-- Stitch Fix: "Sr. DevOps/SRE" | 2017
-WRONG: Putting Scribd at 2020-2022 (that was Orion Labs)
-WRONG: Putting Orion Labs at 2016-2017 (that was overlapping with Apple)
-WRONG: Changing "Sr. DevOps/SRE" to "Senior DevOps Engineer"
+Each achievement in the source data has EXACT company name, role title, and dates. You MUST use these EXACTLY as provided. DO NOT mix dates between companies. DO NOT modify role titles. DO NOT extend date ranges.
+WRONG: Mixing up which dates go with which company
+WRONG: Modifying role titles to sound better
+WRONG: Extending or changing date ranges
 RIGHT: Using the EXACT company, role, and dates from the achievement data
 Each company-role-date combination is unique and must not be mixed with other companies. This is employment history accuracy and errors constitute resume fraud.
 
@@ -409,8 +397,8 @@ Each company-role-date combination is unique and must not be mixed with other co
   * If you can't make a strong quantitative claim (20+, large percentage, significant dollar amount), make a qualitative one instead
   * NEVER use weak numbers in professional summary - it undermines credibility
 - CRITICAL: When stating years of experience, use the EXACT number from profile.years_experience field
-- CRITICAL TEMPORAL IMPOSSIBILITY: NEVER claim X years of experience with a specific technology/tool if that tool didn't exist for X years. Example: Do NOT say "25+ years with Terraform" when Terraform was first released in 2014. Instead say "25+ years of infrastructure automation experience with expertise in Terraform" or "Deep expertise in Terraform across multi-cloud environments"
-- CRITICAL MISLEADING JUXTAPOSITION: Do NOT combine unrelated achievements in the same sentence in a way that implies false connections. Example: If candidate managed 30,000 servers at Apple (2015-2017, pre-Kubernetes era) and has Kubernetes expertise from later roles, DO NOT write "Expert in Kubernetes with proven track record managing 30,000+ servers" - this falsely implies the servers were managed with Kubernetes. Instead, separate the claims: "Expert in Kubernetes and distributed systems" in one bullet, "Managed global infrastructure of 30,000+ servers for Apple Pay" in another bullet. Each achievement must stand alone with its correct context.
+- CRITICAL TEMPORAL IMPOSSIBILITY: NEVER claim X years of experience with a specific technology/tool if that tool didn't exist for X years. Example: Do NOT say "[X]+ years with Terraform" when Terraform was first released in 2014 and the candidate has [X]+ total years. Instead say "[X]+ years of infrastructure automation experience with expertise in Terraform" or "Deep expertise in Terraform across multi-cloud environments"
+- CRITICAL MISLEADING JUXTAPOSITION: Do NOT combine unrelated achievements in the same sentence in a way that implies false connections. Example: If candidate managed large infrastructure at Company A (2015-2017, pre-Kubernetes era) and has Kubernetes expertise from later roles, DO NOT write "Expert in Kubernetes with proven track record managing [large number]+ servers" - this falsely implies the servers were managed with Kubernetes. Instead, separate the claims: "Expert in Kubernetes and distributed systems" in one bullet, "Managed global infrastructure of [number]+ servers at Company A" in another bullet. Each achievement must stand alone with its correct context and timeframe.
 
 **CRITICAL - NO EMPLOYMENT GAPS:**
 You MUST include ALL companies from the candidate's employment history in chronological order to avoid gaps in the timeline. NEVER skip a company entirely, as this creates unexplained gaps in work history that raise red flags with hiring managers. For a general resume, every role should be included with appropriate detail. For example, if the candidate has companies at 2023-Present, 2022-2023, 2020-2022, 2018-2020, 2017, 2015-2017, and 2007-2014, ALL must be present in that exact order. Omitting any company (like skipping 2015-2017) creates a suspicious 3-year gap. Include every company to maintain complete employment history.
