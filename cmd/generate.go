@@ -14,6 +14,7 @@ import (
 	"github.com/nikogura/resume-tailor/pkg/config"
 	"github.com/nikogura/resume-tailor/pkg/jd"
 	"github.com/nikogura/resume-tailor/pkg/llm"
+	"github.com/nikogura/resume-tailor/pkg/rag"
 	"github.com/nikogura/resume-tailor/pkg/renderer"
 	"github.com/nikogura/resume-tailor/pkg/summaries"
 	"github.com/pkg/errors"
@@ -122,9 +123,20 @@ func runGenerate(cmd *cobra.Command, args []string) (err error) {
 	// Filter top achievements (score >= 0.6)
 	topAchievements := filterTopAchievements(achievementMaps, analysisResp.RankedAchievements, 0.6)
 
+	// Retrieve RAG context from past evaluations
+	var ragContext string
+	ragContext, err = retrieveRAGContext(ctx, baseOutDir, finalCompany, finalRole, jobDescription)
+	if err != nil {
+		// Log but don't fail if RAG retrieval fails
+		if getVerbose() {
+			fmt.Printf("Warning: RAG retrieval failed: %v\n", err)
+		}
+		ragContext = ""
+	}
+
 	// Phase 2: Generate
 	var genResp llm.GenerationResponse
-	genResp, err = runGenerationPhase(ctx, client, jobDescription, finalCompany, finalRole, coverLetterContext, analysisResp.JDAnalysis, topAchievements, data)
+	genResp, err = runGenerationPhase(ctx, client, jobDescription, finalCompany, finalRole, coverLetterContext, ragContext, cfg.CompleteResumeURL, analysisResp.JDAnalysis, topAchievements, data)
 	if err != nil {
 		return err
 	}
@@ -164,8 +176,8 @@ func runAnalysisPhase(ctx context.Context, client *llm.Client, jobDescription st
 	return analysisResp, err
 }
 
-func runGenerationPhase(ctx context.Context, client *llm.Client, jobDescription, company, role, context string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genResp llm.GenerationResponse, err error) {
-	genReq := buildGenerationRequest(jobDescription, company, role, context, analysis, achievements, data)
+func runGenerationPhase(ctx context.Context, client *llm.Client, jobDescription, company, role, context, ragContext, completeResumeURL string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genResp llm.GenerationResponse, err error) {
+	genReq := buildGenerationRequest(jobDescription, company, role, context, ragContext, completeResumeURL, analysis, achievements, data)
 
 	// Show spinner during generation unless in verbose mode
 	var genSpinner *spinner
@@ -290,7 +302,7 @@ func renderAndCleanupGenerate(resumeMD, resumePDF, coverMD, coverPDF, templatePa
 	return err
 }
 
-func buildGenerationRequest(jobDescription, company, role, context string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genReq llm.GenerationRequest) {
+func buildGenerationRequest(jobDescription, company, role, context, ragContext, completeResumeURL string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genReq llm.GenerationRequest) {
 	genReq = llm.GenerationRequest{
 		JobDescription:     jobDescription,
 		Company:            company,
@@ -298,6 +310,8 @@ func buildGenerationRequest(jobDescription, company, role, context string, analy
 		HiringManager:      analysis.HiringManager,
 		JDSummary:          buildJDSummary(analysis),
 		CoverLetterContext: context,
+		RAGContext:         ragContext,
+		CompleteResumeURL:  completeResumeURL,
 		Achievements:       achievements,
 		Profile:            profileToMap(data.Profile),
 		Skills:             skillsToMap(data.Skills),
@@ -677,4 +691,29 @@ func unescapeNewlines(text string) (unescaped string) {
 	}
 
 	return unescaped
+}
+
+// retrieveRAGContext retrieves lessons learned from past evaluations.
+func retrieveRAGContext(ctx context.Context, outputDir, company, role, jdText string) (context string, err error) {
+	// Create indexer
+	var indexer *rag.Indexer
+	indexer, err = rag.NewIndexer(outputDir)
+	if err != nil {
+		return context, err
+	}
+
+	// Create retriever
+	retriever := rag.NewRetriever(indexer)
+
+	// Retrieve relevant evaluations
+	var ragCtx rag.RAGContext
+	ragCtx, err = retriever.Retrieve(ctx, company, role, jdText)
+	if err != nil {
+		return context, err
+	}
+
+	// Format for prompt
+	context = retriever.FormatForPrompt(ragCtx)
+
+	return context, err
 }

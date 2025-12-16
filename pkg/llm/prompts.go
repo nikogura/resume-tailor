@@ -82,6 +82,23 @@ ADDITIONAL CONTEXT FOR COVER LETTER:
 `, req.CoverLetterContext)
 	}
 
+	ragSection := ""
+	if req.RAGContext != "" {
+		ragSection = fmt.Sprintf(`
+%s
+
+`, req.RAGContext)
+	}
+
+	resumeNoteSection := ""
+	if req.CompleteResumeURL != "" {
+		resumeNoteSection = fmt.Sprintf(`
+
+COMPLETE_RESUME_URL: %s
+
+`, req.CompleteResumeURL)
+	}
+
 	prompt = fmt.Sprintf(`You are an expert resume writer creating tailored application materials.
 
 **CRITICAL ANTI-FABRICATION RULES - READ THIS FIRST - VIOLATION = IMMEDIATE REJECTION:**
@@ -108,7 +125,7 @@ ADDITIONAL CONTEXT FOR COVER LETTER:
 5. **COVER LETTER DOMAIN RULES**: Cover letter must acknowledge mission/company focus from JD BUT never claim candidate HAS that domain experience.
    - CORRECT: "Your mission to [JD mission] resonates with my experience building [what candidate actually built]"
    - FORBIDDEN: "I've built systems for [JD domain]" when candidate hasn't
-
+%s
 JOB DESCRIPTION:
 %s
 
@@ -129,7 +146,7 @@ OPEN SOURCE PROJECTS:
 
 COMPANY URLS:
 %s
-%s
+%s%s
 Generate a tailored resume and cover letter in markdown format.
 
 RESUME REQUIREMENTS:
@@ -246,6 +263,7 @@ COVER LETTER REQUIREMENTS:
   * Pattern matching achievements to JD domain is FORBIDDEN: "cryptocurrency trading is like gaming telemetry" is fabrication. Acknowledge it's different context with similar technical patterns.
 - CRITICAL: Avoid overly internal language - keep stories externally appropriate and professional
 - Closing: Clear call to action
+- CRITICAL: If COMPLETE_RESUME_URL is provided above, add a brief note before the sign-off explaining this is a targeted resume with a link: "\\n\\n---\\n\\n*Note: This is a targeted resume highlighting experience most relevant to this role. My complete resume with full project history is available [here](COMPLETE_RESUME_URL).*\\n\\n" (substitute the actual URL from COMPLETE_RESUME_URL field)
 - CRITICAL: End with proper letter format: "Sincerely,\\n\\n[Name]" or "Best regards,\\n\\n[Name]" (blank line between closing and name)
 
 TONE: Professional but authentic. Show "I've solved YOUR exact problems before."
@@ -257,10 +275,11 @@ Return ONLY valid JSON in this exact format (no markdown, no commentary):
 }
 
 CRITICAL: Ensure all JSON strings are properly escaped. Use \\n for newlines, \\" for quotes.`,
+		ragSection,
 		req.JobDescription, req.Company, req.Role,
 		string(profileJSON), string(achievementsJSON),
 		string(skillsJSON), string(projectsJSON),
-		string(companyURLsJSON), contextSection)
+		string(companyURLsJSON), contextSection, resumeNoteSection)
 
 	return prompt
 }

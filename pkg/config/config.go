@@ -13,6 +13,7 @@ type Config struct {
 	Name              string        `json:"name"`
 	AnthropicAPIKey   string        `json:"anthropic_api_key"`
 	SummariesLocation string        `json:"summaries_location"`
+	CompleteResumeURL string        `json:"complete_resume_url,omitempty"`
 	Pandoc            PandocConfig  `json:"pandoc"`
 	Defaults          DefaultConfig `json:"defaults"`
 }
