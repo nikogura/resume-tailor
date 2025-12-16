@@ -102,7 +102,7 @@ func runGenerate(cmd *cobra.Command, args []string) (err error) {
 	achievementMaps := convertAchievements(data.Achievements)
 
 	// Phase 1: Analyze
-	client := llm.NewClient(cfg.AnthropicAPIKey)
+	client := llm.NewClient(cfg.AnthropicAPIKey, cfg.GetGenerationModel())
 
 	var analysisResp llm.AnalysisResponse
 	analysisResp, err = runAnalysisPhase(ctx, client, jobDescription, achievementMaps)

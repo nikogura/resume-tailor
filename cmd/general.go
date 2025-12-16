@@ -95,7 +95,7 @@ func runGeneral(cmd *cobra.Command, args []string) (err error) {
 
 	// Generate general resume
 	var genResp llm.GeneralResumeResponse
-	genResp, err = generateGeneralResume(ctx, cfg.AnthropicAPIKey, data, generalFocus)
+	genResp, err = generateGeneralResume(ctx, cfg.AnthropicAPIKey, cfg.GetGenerationModel(), data, generalFocus)
 	if err != nil {
 		return err
 	}
@@ -126,14 +126,14 @@ func getOutputDir(flagValue, configValue string) (outDir string) {
 	return outDir
 }
 
-func generateGeneralResume(ctx context.Context, apiKey string, data summaries.Data, focus string) (genResp llm.GeneralResumeResponse, err error) {
+func generateGeneralResume(ctx context.Context, apiKey, model string, data summaries.Data, focus string) (genResp llm.GeneralResumeResponse, err error) {
 	// Convert achievements to maps for JSON
 	achievementMaps := make([]map[string]interface{}, len(data.Achievements))
 	for i, achievement := range data.Achievements {
 		achievementMaps[i] = achievementToMap(achievement)
 	}
 
-	client := llm.NewClient(apiKey)
+	client := llm.NewClient(apiKey, model)
 	genReq := llm.GeneralResumeRequest{
 		Achievements: achievementMaps,
 		Profile:      profileToMap(data.Profile),

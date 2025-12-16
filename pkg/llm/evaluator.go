@@ -30,7 +30,7 @@ func NewEvaluator(apiKey, model string) (evaluator *Evaluator, err error) {
 	}
 
 	evaluator = &Evaluator{
-		client: NewClient(apiKey),
+		client: NewClient(apiKey, model),
 		model:  model,
 	}
 

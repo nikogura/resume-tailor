@@ -23,14 +23,19 @@ const (
 // Client represents a Claude API client.
 type Client struct {
 	apiKey     string
+	model      string
 	httpClient *http.Client
 	endpoint   string
 }
 
 // NewClient creates a new Claude API client.
-func NewClient(apiKey string) (client *Client) {
+func NewClient(apiKey, model string) (client *Client) {
+	if model == "" {
+		model = ClaudeModel // Default to Sonnet 4
+	}
 	client = &Client{
 		apiKey:   apiKey,
+		model:    model,
 		endpoint: ClaudeAPIEndpoint,
 		httpClient: &http.Client{
 			Timeout: 120 * time.Second,
@@ -115,7 +120,7 @@ func (c *Client) GenerateGeneral(ctx context.Context, req GeneralResumeRequest) 
 func (c *Client) sendRequest(ctx context.Context, prompt string) (responseText string, err error) {
 	// Build request
 	claudeReq := ClaudeRequest{
-		Model:     ClaudeModel,
+		Model:     c.model,
 		MaxTokens: 4096,
 		Messages: []Message{
 			{

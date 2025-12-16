@@ -56,6 +56,10 @@ Create config file at `~/.resume-tailor/config.json`:
   "anthropic_api_key": "sk-ant-api03-...",
   "summaries_location": "~/.resume-tailor/structured-summaries.json",
   "complete_resume_url": "https://github.com/username/repo/blob/master/general-resume.pdf",
+  "models": {
+    "generation": "claude-sonnet-4-20250514",
+    "evaluation": "claude-sonnet-4-5-20250929"
+  },
   "pandoc": {
     "template_path": "~/.resume-tailor/resume-template.latex",
     "class_file": "~/.resume-tailor/resume.cls"
@@ -71,9 +75,31 @@ Create config file at `~/.resume-tailor/config.json`:
 - `anthropic_api_key`: Your Claude API key (can be overridden with `ANTHROPIC_API_KEY` env var)
 - `summaries_location`: Path to your structured achievements JSON file
 - `complete_resume_url`: (Optional) URL to your complete general resume - will be linked in cover letters
+- `models.generation`: (Optional) Claude model for resume generation (default: `claude-sonnet-4-20250514`)
+- `models.evaluation`: (Optional) Claude model for evaluation (default: `claude-sonnet-4-5-20250929`)
 - `pandoc.template_path`: Path to LaTeX template for PDF generation
 - `pandoc.class_file`: Path to LaTeX class file
 - `defaults.output_dir`: Default output directory for generated resumes
+
+**Model Selection:**
+
+The `models` configuration allows you to customize which Claude models are used for different purposes:
+
+- **Generation Model**: Used for analyzing job descriptions and generating tailored resumes/cover letters. Default is Claude Sonnet 4 (`claude-sonnet-4-20250514`) which balances quality and speed.
+- **Evaluation Model**: Used for evaluating generated content against anti-fabrication rules. Default is Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`) for more thorough fact-checking.
+
+Using separate models ensures the evaluator acts as an independent auditor and won't defend the generator's work. You can customize these based on your needs:
+- Use faster models (like Haiku) for quicker iterations during testing
+- Use more capable models (like Opus) for higher-quality output in production
+- Keep both models the same if you prefer consistency over separation
+
+Available models include:
+- `claude-sonnet-4-20250514` - Balanced performance (recommended for generation)
+- `claude-sonnet-4-5-20250929` - Enhanced capabilities (recommended for evaluation)
+- `claude-opus-4-5-20251101` - Highest quality (slower, more expensive)
+- `claude-haiku-3-7-20250122` - Fastest, most economical
+
+If the `models` section is omitted, the system uses the defaults above.
 
 ### LaTeX Templates
 

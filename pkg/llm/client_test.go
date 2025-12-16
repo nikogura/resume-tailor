@@ -12,7 +12,8 @@ import (
 
 func TestNewClient(t *testing.T) {
 	apiKey := "test-api-key"
-	client := NewClient(apiKey)
+	model := "claude-sonnet-4-20250514"
+	client := NewClient(apiKey, model)
 
 	if client == nil {
 		t.Fatal("Expected non-nil client")
@@ -20,6 +21,10 @@ func TestNewClient(t *testing.T) {
 
 	if client.apiKey != apiKey {
 		t.Errorf("Expected API key '%s', got '%s'", apiKey, client.apiKey)
+	}
+
+	if client.model != model {
+		t.Errorf("Expected model '%s', got '%s'", model, client.model)
 	}
 
 	if client.endpoint != ClaudeAPIEndpoint {
@@ -87,7 +92,7 @@ func TestAnalyze(t *testing.T) {
 	defer server.Close()
 
 	// Create client pointing to test server.
-	client := NewClient("test-key")
+	client := NewClient("test-key", "")
 	client.endpoint = server.URL
 
 	// Test Analyze.
@@ -136,7 +141,7 @@ func TestGenerate(t *testing.T) {
 	defer server.Close()
 
 	// Create client.
-	client := NewClient("test-key")
+	client := NewClient("test-key", "")
 	client.endpoint = server.URL
 
 	// Test Generate.
@@ -190,7 +195,7 @@ func TestGenerateGeneral(t *testing.T) {
 	defer server.Close()
 
 	// Create client.
-	client := NewClient("test-key")
+	client := NewClient("test-key", "")
 	client.endpoint = server.URL
 
 	// Test GenerateGeneral.
@@ -221,7 +226,7 @@ func TestAPIError(t *testing.T) {
 	defer server.Close()
 
 	// Create client.
-	client := NewClient("test-key")
+	client := NewClient("test-key", "")
 	client.endpoint = server.URL
 
 	// Test that Analyze returns error.
@@ -254,7 +259,7 @@ func TestInvalidJSONResponse(t *testing.T) {
 	defer server.Close()
 
 	// Create client.
-	client := NewClient("test-key")
+	client := NewClient("test-key", "")
 	client.endpoint = server.URL
 
 	// Test that Analyze returns error.
@@ -278,7 +283,7 @@ func TestEmptyContent(t *testing.T) {
 	defer server.Close()
 
 	// Create client.
-	client := NewClient("test-key")
+	client := NewClient("test-key", "")
 	client.endpoint = server.URL
 
 	// Test that Analyze returns error.
@@ -302,7 +307,7 @@ func TestContextCancellation(t *testing.T) {
 	defer server.Close()
 
 	// Create client.
-	client := NewClient("test-key")
+	client := NewClient("test-key", "")
 	client.endpoint = server.URL
 
 	// Create context that cancels immediately.
@@ -394,7 +399,7 @@ func TestAnalyzeWithCodeFences(t *testing.T) {
 	defer server.Close()
 
 	// Create client.
-	client := NewClient("test-key")
+	client := NewClient("test-key", "")
 	client.endpoint = server.URL
 
 	// Test that Analyze handles code fences.
@@ -410,7 +415,7 @@ func TestAnalyzeWithCodeFences(t *testing.T) {
 }
 
 func TestHTTPClientTimeout(t *testing.T) {
-	client := NewClient("test-key")
+	client := NewClient("test-key", "")
 
 	// Verify timeout is set.
 	if client.httpClient.Timeout != 120*time.Second {
@@ -450,7 +455,7 @@ func TestRequestHeaders(t *testing.T) {
 	defer server.Close()
 
 	// Create client.
-	client := NewClient("my-api-key")
+	client := NewClient("my-api-key", "")
 	client.endpoint = server.URL
 
 	// Make request - header checks are in server handler.

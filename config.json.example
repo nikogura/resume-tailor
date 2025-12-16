@@ -2,6 +2,10 @@
   "name": "john-doe",
   "anthropic_api_key": "sk-ant-api03-YOUR_API_KEY_HERE",
   "summaries_location": "~/.resume-tailor/structured-summaries.json",
+  "models": {
+    "generation": "claude-sonnet-4-20250514",
+    "evaluation": "claude-sonnet-4-5-20250929"
+  },
   "pandoc": {
     "template_path": "~/.resume-tailor/resume-template.latex",
     "class_file": "~/.resume-tailor/resume.cls"

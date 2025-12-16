@@ -69,7 +69,7 @@ func runEvaluate(cmd *cobra.Command, args []string) (err error) {
 
 	// Create evaluator
 	var evaluator *llm.Evaluator
-	evaluator, err = llm.NewEvaluator(cfg.AnthropicAPIKey, "")
+	evaluator, err = llm.NewEvaluator(cfg.AnthropicAPIKey, cfg.GetEvaluationModel())
 	if err != nil {
 		err = fmt.Errorf("failed to create evaluator: %w", err)
 		return err

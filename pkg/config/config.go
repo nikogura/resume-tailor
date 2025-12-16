@@ -14,8 +14,15 @@ type Config struct {
 	AnthropicAPIKey   string        `json:"anthropic_api_key"`
 	SummariesLocation string        `json:"summaries_location"`
 	CompleteResumeURL string        `json:"complete_resume_url,omitempty"`
+	Models            ModelsConfig  `json:"models,omitempty"`
 	Pandoc            PandocConfig  `json:"pandoc"`
 	Defaults          DefaultConfig `json:"defaults"`
+}
+
+// ModelsConfig holds model selection for generation and evaluation.
+type ModelsConfig struct {
+	Generation string `json:"generation,omitempty"`
+	Evaluation string `json:"evaluation,omitempty"`
 }
 
 // PandocConfig holds pandoc-related configuration.
@@ -27,6 +34,26 @@ type PandocConfig struct {
 // DefaultConfig holds default values for commands.
 type DefaultConfig struct {
 	OutputDir string `json:"output_dir"`
+}
+
+// GetGenerationModel returns the generation model or default if not specified.
+func (c *Config) GetGenerationModel() (model string) {
+	if c.Models.Generation != "" {
+		model = c.Models.Generation
+		return model
+	}
+	model = "claude-sonnet-4-20250514" // Default to Sonnet 4
+	return model
+}
+
+// GetEvaluationModel returns the evaluation model or default if not specified.
+func (c *Config) GetEvaluationModel() (model string) {
+	if c.Models.Evaluation != "" {
+		model = c.Models.Evaluation
+		return model
+	}
+	model = "claude-sonnet-4-5-20250929" // Default to Sonnet 4.5
+	return model
 }
 
 // Load reads configuration from file with environment variable overrides.
