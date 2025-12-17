@@ -936,6 +936,50 @@ func writeInitialFiles(genResp llm.GenerationResponse, jobDescription string, fi
 	return err
 }
 
+// applyStandardWordingFixes applies standard wording fixes to resume and cover letter.
+func applyStandardWordingFixes(filenames outputFilenames) (err error) {
+	fixer := llm.NewFixer()
+
+	// Read resume
+	var resumeBytes []byte
+	resumeBytes, err = os.ReadFile(filenames.resumeMD)
+	if err != nil {
+		err = errors.Wrap(err, "failed to read resume for wording fixes")
+		return err
+	}
+
+	// Read cover letter
+	var coverBytes []byte
+	coverBytes, err = os.ReadFile(filenames.coverMD)
+	if err != nil {
+		err = errors.Wrap(err, "failed to read cover letter for wording fixes")
+		return err
+	}
+
+	// Apply wording fixes to both
+	fixedResume := fixer.ApplyCoverLetterWording(string(resumeBytes))
+	fixedCover := fixer.ApplyCoverLetterWording(string(coverBytes))
+
+	// Write back if changed
+	if fixedResume != string(resumeBytes) {
+		err = os.WriteFile(filenames.resumeMD, []byte(fixedResume), 0600)
+		if err != nil {
+			err = errors.Wrap(err, "failed to write fixed resume")
+			return err
+		}
+	}
+
+	if fixedCover != string(coverBytes) {
+		err = os.WriteFile(filenames.coverMD, []byte(fixedCover), 0600)
+		if err != nil {
+			err = errors.Wrap(err, "failed to write fixed cover letter")
+			return err
+		}
+	}
+
+	return err
+}
+
 // runEvaluationPhase runs the evaluation phase based on auto-fix setting.
 func runEvaluationPhase(ctx context.Context, cfg config.Config, company, role string, filenames outputFilenames, data summaries.Data) (finalEval llm.EvaluationResponse) {
 	var err error
@@ -963,6 +1007,12 @@ func runHybridEvaluationAndFix(ctx context.Context, cfg config.Config, company, 
 	evalResp, err = runEvaluation(ctx, cfg, company, role, filenames, data)
 	if err != nil {
 		return finalEval, err
+	}
+
+	// Always apply standard wording fixes (even if no violations detected)
+	err = applyStandardWordingFixes(filenames)
+	if err != nil {
+		fmt.Printf("Warning: Failed to apply standard wording fixes: %v\n", err)
 	}
 
 	// Check if we have violations to fix

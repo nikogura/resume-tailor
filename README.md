@@ -319,10 +319,27 @@ This project follows strict [Nik Ogura's engineering standards](https://nikogura
 
 ## Cost Estimate
 
-- **Generation**: ~$0.10-0.50 per resume (Claude API usage)
-- **Evaluation**: ~$0.10-0.30 per evaluation (separate Claude instance)
-- **Total per application**: ~$0.20-0.80 (generation + evaluation)
-- Costs depend on number of achievements, JD length, and output complexity
+Based on Claude API pricing (~$3/M input tokens, ~$15/M output tokens):
+
+- **Per Resume Generation**: $0.40-1.00 typical, up to $1.50 with re-evaluation
+  - JD analysis: 15-40K input, 5-15K output
+  - Resume generation: 20-50K input, 3-8K output
+  - Evaluation: 30-60K input, 5-15K output
+  - RAG indexing: 5-15K input, minimal output
+  - Re-evaluation (if fixes needed): +30-60K input, +5-15K output
+
+- **Typical Flow**: $0.60-1.20 per complete application (includes evaluation and fixes)
+- **Factors Affecting Cost**:
+  - Number of achievements in your library (more = higher analysis cost)
+  - JD complexity and length
+  - Number of violations requiring fixes and re-evaluation
+  - Model selection (Sonnet 4 vs Sonnet 4.5 vs Opus vs Haiku)
+
+**Cost Optimization Tips:**
+- Use Haiku for testing/iteration ($0.25/M input, $1.25/M output - ~80% cheaper)
+- Keep achievement library focused on recent, high-quality items
+- Use cached model responses where possible
+- Configure generation model separately from evaluation model for cost control
 
 ## Troubleshooting
 

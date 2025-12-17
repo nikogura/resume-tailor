@@ -75,7 +75,7 @@ func (f *Fixer) fixResumeViolations(resume string, evalResp EvaluationResponse, 
 	}
 
 	// Fix weak quantifications
-	fixed = f.applyCoverLetterWording(fixed)
+	fixed = f.ApplyCoverLetterWording(fixed)
 
 	return fixed, fixes
 }
@@ -92,7 +92,7 @@ func (f *Fixer) fixCoverLetterViolations(coverLetter string, evalResp Evaluation
 	}
 
 	// Fix weak quantifications and wording patterns
-	fixed = f.applyCoverLetterWording(fixed)
+	fixed = f.ApplyCoverLetterWording(fixed)
 
 	return fixed
 }
@@ -129,8 +129,8 @@ func (f *Fixer) applyDomainExpertFixes(content string) (fixed string, applied bo
 	return fixed, applied
 }
 
-// applyCoverLetterWording fixes standard cover letter wording patterns.
-func (f *Fixer) applyCoverLetterWording(content string) (fixed string) {
+// ApplyCoverLetterWording fixes standard cover letter wording patterns.
+func (f *Fixer) ApplyCoverLetterWording(content string) (fixed string) {
 	fixed = content
 
 	for _, pattern := range f.coverLetterPatterns {
@@ -183,9 +183,21 @@ func buildTemporalImpossibilityPatterns() (patterns []FixPattern) {
 			RuleMatch:   "TEMPORAL_IMPOSSIBILITY",
 		},
 		{
+			Name:        "Temporal - list with blockchain/crypto",
+			Pattern:     regexp.MustCompile(`(?i)(\*\*[^*]+with )(25\+ years of experience\*\*) (building|architecting|developing) ([^,]*?)(blockchain|cryptocurrency|crypto|DeFi)([^,]*?), ([^,]*?), and ([^\n]+)`),
+			Replacement: `$1$2 in distributed systems and platform engineering** with recent deep expertise in $4$5$6, $7, and $8`,
+			RuleMatch:   "TEMPORAL_IMPOSSIBILITY",
+		},
+		{
 			Name:        "Temporal - general tech prefix",
 			Pattern:     regexp.MustCompile(`(?i)(\*\*[^*]+with )(25\+ years of experience\*\*) (building|architecting|developing) (enterprise-grade|scalable|production) ([^\n]*?) (AWS|Kubernetes|SRE|AI|DeFi|cloud-native|blockchain) ([^,\n]+)`),
 			Replacement: `$1$2 in $4 $5 systems** with expertise in $6 $7`,
+			RuleMatch:   "TEMPORAL_IMPOSSIBILITY",
+		},
+		{
+			Name:        "Temporal - with deep expertise in modern tech",
+			Pattern:     regexp.MustCompile(`(?i)(\*\*[^*]+25\+ years of experience in [^*]+\*\*) with deep expertise in (cloud-native|AI-powered|blockchain|cryptocurrency|DeFi|Kubernetes|container) ([^,\n]+)`),
+			Replacement: `$1 with deep expertise in modern $2 $3`,
 			RuleMatch:   "TEMPORAL_IMPOSSIBILITY",
 		},
 	}
@@ -229,10 +241,10 @@ func buildCoverLetterPatterns() (patterns []FixPattern) {
 			RuleMatch:   "COVER_LETTER_WORDING",
 		},
 		{
-			Name:        "Weak quantification - 5 continents",
-			Pattern:     regexp.MustCompile(`(?i)(across|spanning) 5 continents`),
-			Replacement: `$1 North America, South America, Europe, Africa, and India`,
-			RuleMatch:   "WEAK_QUANTIFICATION",
+			Name:        "Link formatting - filename as link text",
+			Pattern:     regexp.MustCompile(`My complete resume with full project history is available \[here\]\((https://[^\)]+/([^/]+))\)\.`),
+			Replacement: "My complete resume with full project history is available here: [$2]($1).",
+			RuleMatch:   "COVER_LETTER_WORDING",
 		},
 		{
 			Name:        "Weak quantification - 7 clusters",
