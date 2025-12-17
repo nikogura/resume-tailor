@@ -183,6 +183,33 @@ The profile.years_experience field contains the ONLY acceptable number for years
 - RIGHT: "[profile.years_experience]+ years of infrastructure experience"
 This is factual accuracy. Writing any number different from profile.years_experience is lying on the resume and will cause immediate rejection.
 
+**CRITICAL - TEMPORAL IMPOSSIBILITY - READ THIS BEFORE WRITING PROFESSIONAL SUMMARY:**
+NEVER write "25+ years of experience building/architecting [SPECIFIC RECENT TECHNOLOGY]" when that technology didn't exist 25+ years ago. This is the #1 fabrication error.
+
+Technologies TOO RECENT for "25+ years":
+- AWS/Azure/GCP (2006-2010) = 15-19 years max
+- Kubernetes/EKS (2014) = 11 years max
+- SRE discipline (2003-2010) = 15-22 years max
+- AI-powered systems (2017+) = 5-8 years max
+- Docker/containers (2013) = 12 years max
+- Cloud-native (2010-2015) = 10-15 years max
+
+MANDATORY STRUCTURE: "25+ years in [TIMELESS GENERAL DOMAINS], with [expertise level] in [SPECIFIC TECH]"
+
+WRONG examples that will cause IMMEDIATE REJECTION:
+- "25+ years building AWS infrastructure" ❌
+- "25+ years architecting Kubernetes platforms" ❌
+- "25+ years of site reliability engineering" ❌
+- "25+ years with AI-powered automation" ❌
+
+RIGHT examples:
+- "25+ years in infrastructure automation, with deep AWS expertise" ✓
+- "25+ years in platform engineering, with extensive Kubernetes experience" ✓
+- "25+ years in operational excellence, with modern SRE practices" ✓
+- "25+ years in system architecture, with AI integration expertise" ✓
+
+Timeless domains SAFE for "25+ years": distributed systems, platform engineering, infrastructure automation, software engineering, system architecture, operational excellence, security engineering, data engineering
+
 **CRITICAL - COMPANY/ROLE/DATE ACCURACY - READ THIS SECOND:**
 Each achievement in the source data has EXACT company name, role title, and dates. You MUST use these EXACTLY as provided. DO NOT mix dates between companies. DO NOT modify role titles. DO NOT extend date ranges.
 WRONG: Mixing up which dates go with which company
@@ -324,8 +351,58 @@ CRITICAL PROFESSIONAL SUMMARY FORMATTING:
 - Strong positioning words ("Expert", "Leader", "Specialist") require strong evidence: multiple achievements, years of experience, significant scale
 - Include "25+ years of experience" (full phrase) in first bullet for completeness
 
-Example format (DO NOT COPY - derive from actual achievements):
-• **Principal Engineer and CIO with 25+ years of experience** [comprehensive description of systems, platforms, infrastructure types, and industries from achievement data]
+**CRITICAL - TEMPORAL IMPOSSIBILITY IN PROFESSIONAL SUMMARY:**
+The "25+ years of experience" phrase MUST refer to GENERAL, TIMELESS DOMAINS only - NEVER to specific technologies, tools, or practices that didn't exist 25 years ago. This is the #1 most common fabrication that will cause immediate rejection.
+
+WRONG examples (technologies too recent for 25+ years):
+- "25+ years building AWS infrastructure" (AWS launched 2006 - only 19 years old)
+- "25+ years architecting Kubernetes platforms" (K8s released 2014 - only 11 years old)
+- "25+ years of site reliability engineering" (SRE discipline ~15 years old)
+- "25+ years of AI-powered automation" (practical AI automation ~5-7 years old)
+- "25+ years with Docker/containers" (Docker released 2013 - only 12 years old)
+- "25+ years of cloud-native development" (cloud-native ~10-15 years old)
+
+RIGHT structure - separate total experience from specific technologies:
+"25+ years of experience in [GENERAL TIMELESS DOMAINS], with deep expertise in [SPECIFIC RECENT TECHNOLOGIES]"
+
+RIGHT examples:
+- "25+ years in distributed systems and platform engineering, with deep expertise in Kubernetes, AWS, and cloud-native architecture"
+- "25+ years of infrastructure automation and operational excellence, with extensive experience in modern SRE practices, containerization, and multi-cloud orchestration"
+- "25+ years of software engineering and system architecture, with recent focus on AI-powered automation and intelligent operational workflows"
+
+General timeless domains (safe for 25+ years):
+- Distributed systems
+- Platform engineering
+- Infrastructure automation
+- Software engineering
+- System architecture
+- Operational excellence
+- Security engineering
+- Data engineering
+
+Specific recent technologies (use "deep expertise", "extensive experience", "recent focus" instead):
+- Kubernetes, Docker, containers (2013-2014)
+- AWS, Azure, GCP specific services (2006-2010)
+- AI/ML automation (2017-2020 practically)
+- SRE practices (2003-2010)
+- Cloud-native patterns (2010-2015)
+- Modern CI/CD tools (2010-2020)
+
+**MANDATORY FIRST BULLET FORMAT - DO NOT DEVIATE:**
+The first bullet MUST follow this EXACT structure with NO exceptions:
+
+• **Principal Engineer and CIO with 25+ years of experience in [ONLY TIMELESS DOMAINS FROM THIS LIST: distributed systems, platform engineering, infrastructure automation, software engineering, system architecture, operational excellence, security engineering, data engineering]** across [industries], with deep expertise in [SPECIFIC MODERN TECHNOLOGIES like Kubernetes, AWS, AI systems, SRE practices]
+
+WRONG - DO NOT WRITE:
+• "25+ years building/architecting [ANY SPECIFIC TECHNOLOGY]"
+• "25+ years of [ANY RECENT PRACTICE LIKE SRE/DevOps/Cloud-native]"
+• "25+ years with [ANY TOOL/PLATFORM]"
+
+RIGHT - MUST WRITE:
+• "25+ years in [TIMELESS DOMAIN], with [expertise level] in [SPECIFIC TECH]"
+
+Example (follow structure, not content):
+• **Principal Engineer and CIO with 25+ years of experience in distributed systems and infrastructure automation** across fintech and cryptocurrency platforms, with deep expertise in Kubernetes, AWS EKS, and modern cloud-native architecture
 
 • **[Primary Technical Domain from achievements] Expert** specializing in [specific technologies from achievements] with proven track record [specific scale metrics from achievements]
 
@@ -382,6 +459,7 @@ Each company-role-date combination is unique and must not be mixed with other co
 
 - Professional summary: 3-5 bullet points highlighting breadth and depth of experience
 - CRITICAL PROFESSIONAL SUMMARY ANTI-HALLUCINATION: The Professional Summary MUST contain ONLY experience, technologies, frameworks, certifications, and compliance standards that are EXPLICITLY present in the candidate's achievement data, skills data, or profile. DO NOT invent or infer experience with technologies, compliance frameworks, certifications, or methodologies not in the candidate data. Focus on what the candidate HAS done, not what sounds impressive. This is a hard requirement for truthfulness.
+- **CRITICAL TEMPORAL IMPOSSIBILITY:** The "25+ years of experience" phrase MUST refer to GENERAL, TIMELESS DOMAINS only - NEVER to specific technologies that didn't exist 25 years ago. WRONG: "25+ years with Kubernetes" (K8s only 11 years old). RIGHT: "25+ years in platform engineering, with deep expertise in Kubernetes". Use structure: "25+ years in [GENERAL DOMAINS], with [expertise level] in [SPECIFIC RECENT TECH]". General domains safe for 25+ years: distributed systems, platform engineering, infrastructure automation, software engineering. Recent tech requiring "deep expertise"/"extensive experience" phrasing: Kubernetes (2014), AWS services (2006+), AI automation (2017+), SRE practices (2003+), Docker (2013).
 
 **FOCUS-SPECIFIC GUIDANCE (Focus: %s):**
 %s

@@ -156,6 +156,7 @@ func (e *Evaluator) callClaude(ctx context.Context, prompt string) (responseText
 	return responseText, err
 }
 
+//nolint:funlen // Evaluation prompt needs to be comprehensive
 func (e *Evaluator) buildEvaluationPrompt(req EvaluationRequest) (prompt string) {
 	prompt = fmt.Sprintf(`You are a resume evaluation specialist. Your job is to score generated resumes and cover letters for FACTUAL ACCURACY and compliance with anti-fabrication rules.
 
@@ -214,6 +215,33 @@ Examples: "7 clusters", "3 regions", "5 team members", "2 weeks"
 - Years of experience: Must exactly match profile.years_experience (check for "25+ years", "30+ years", etc.)
 - Company/Role/Dates: Must exactly match source achievements
 - Metrics: Every percentage, dollar amount, must be in source achievements metrics
+
+**RULE 7: TEMPORAL IMPOSSIBILITY - CRITICAL FABRICATION**
+Check if resume claims "X+ years of experience" with specific technologies/practices that didn't exist X years ago. This is RESUME FRAUD.
+
+Technology ages (as of 2025):
+- AWS (launched 2006): 19 years old maximum
+- Kubernetes (released 2014): 11 years old maximum
+- Docker/containers (2013): 12 years old maximum
+- SRE discipline (Google 2003, mainstream ~2010): 15-22 years old maximum
+- AI-powered automation (practical 2017+): 8 years old maximum
+- Cloud-native patterns (2010-2015): 10-15 years old maximum
+- Azure (2010): 15 years old maximum
+- GCP (2008): 17 years old maximum
+
+CRITICAL violations - IMMEDIATE REJECTION:
+- "25+ years building AWS infrastructure" (AWS only 19 years old) ❌
+- "25+ years architecting Kubernetes platforms" (K8s only 11 years old) ❌
+- "25+ years of site reliability engineering" (SRE ~15-20 years old) ❌
+- "25+ years with AI-powered automation" (practical AI only ~8 years) ❌
+- "25+ years building cloud-native systems" (cloud-native ~10-15 years) ❌
+
+CORRECT phrasing:
+- "25+ years in infrastructure automation, with deep AWS expertise" ✓
+- "25+ years in platform engineering, with extensive Kubernetes experience" ✓
+- "25+ years in operational excellence, with modern SRE practices" ✓
+
+Timeless domains acceptable for "25+ years": distributed systems, platform engineering, infrastructure automation, software engineering, system architecture, operational excellence, security engineering, data engineering, network engineering
 
 For EACH violation you find, you MUST provide:
 {

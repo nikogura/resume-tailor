@@ -184,6 +184,17 @@ resume-tailor generate jd.txt \
   --company "Acme Corp" \
   --role "Staff Engineer" \
   --context "Referred by Jane Smith, Engineering Manager. Excited about the company's recent Series B funding and growth plans."
+
+# Multiple applications to same company/role - use job-id to differentiate
+resume-tailor generate jd-platform.txt \
+  --company "Acme Corp" \
+  --role "Principal Engineer" \
+  --job-id "req-8886"
+
+resume-tailor generate jd-infrastructure.txt \
+  --company "Acme Corp" \
+  --role "Principal Engineer" \
+  --job-id "req-8492"
 ```
 
 **Generates:**
@@ -191,6 +202,18 @@ resume-tailor generate jd.txt \
 - `your-name-acme-corp-staff-devops-engineer-resume.pdf`
 - `your-name-acme-corp-staff-devops-engineer-cover.md`
 - `your-name-acme-corp-staff-devops-engineer-cover.pdf`
+
+**Using `--job-id` for Multiple Applications:**
+
+When applying to multiple positions at the same company with similar role titles, use the `--job-id` flag to prevent filename collisions. The job ID is appended to the filename:
+
+- Without `--job-id`: `your-name-acme-corp-principal-engineer-resume.pdf`
+- With `--job-id "req-8886"`: `your-name-acme-corp-principal-engineer-req-8886-resume.pdf`
+
+Common job ID formats:
+- Requisition numbers: `req-12345`, `8886`, `JR-2024-001`
+- Team/focus area: `platform`, `infrastructure`, `api`
+- Short descriptors: `backend`, `fullstack`, `ml`
 
 ### Evaluate Generated Resumes
 
