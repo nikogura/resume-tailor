@@ -235,6 +235,12 @@ func buildDomainExpertPatterns() (patterns []FixPattern) {
 func buildCoverLetterPatterns() (patterns []FixPattern) {
 	patterns = []FixPattern{
 		{
+			Name:        "Remove specializing language",
+			Pattern:     regexp.MustCompile(`(?i)specializing in ([^,.\n]+)`),
+			Replacement: `with experience in $1`,
+			RuleMatch:   "FORBIDDEN_WORDING",
+		},
+		{
 			Name:        "Targeted resume wording",
 			Pattern:     regexp.MustCompile(`This is a targeted resume highlighting`),
 			Replacement: `The resume submitted for this role highlights`,
