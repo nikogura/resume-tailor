@@ -99,6 +99,15 @@ COMPLETE_RESUME_URL: %s
 `, req.CompleteResumeURL)
 	}
 
+	linkedInSection := ""
+	if req.LinkedInURL != "" {
+		linkedInSection = fmt.Sprintf(`
+
+LINKEDIN_URL: %s
+
+`, req.LinkedInURL)
+	}
+
 	prompt = fmt.Sprintf(`You are an expert resume writer creating tailored application materials.
 
 **CRITICAL ANTI-FABRICATION RULES - READ THIS FIRST - VIOLATION = IMMEDIATE REJECTION:**
@@ -146,7 +155,7 @@ OPEN SOURCE PROJECTS:
 
 COMPANY URLS:
 %s
-%s%s
+%s%s%s
 Generate a tailored resume and cover letter in markdown format.
 
 RESUME REQUIREMENTS:
@@ -356,7 +365,7 @@ CRITICAL: Ensure all JSON strings are properly escaped. Use \\n for newlines, \\
 		req.JobDescription, req.Company, req.Role,
 		string(profileJSON), string(achievementsJSON),
 		string(skillsJSON), string(projectsJSON),
-		string(companyURLsJSON), contextSection, resumeNoteSection)
+		string(companyURLsJSON), contextSection, resumeNoteSection, linkedInSection)
 
 	return prompt
 }

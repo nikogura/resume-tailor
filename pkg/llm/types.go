@@ -40,6 +40,7 @@ type GenerationRequest struct {
 	CoverLetterContext string                   `json:"cover_letter_context,omitempty"`
 	RAGContext         string                   `json:"rag_context,omitempty"` // Lessons from past evaluations
 	CompleteResumeURL  string                   `json:"complete_resume_url,omitempty"`
+	LinkedInURL        string                   `json:"linkedin_url,omitempty"`
 	Achievements       []map[string]interface{} `json:"achievements"`
 	Profile            map[string]interface{}   `json:"profile"`
 	Skills             map[string]interface{}   `json:"skills"`

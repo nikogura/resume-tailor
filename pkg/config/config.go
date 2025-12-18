@@ -14,6 +14,7 @@ type Config struct {
 	AnthropicAPIKey   string        `json:"anthropic_api_key"`
 	SummariesLocation string        `json:"summaries_location"`
 	CompleteResumeURL string        `json:"complete_resume_url,omitempty"`
+	LinkedInURL       string        `json:"linkedin_url,omitempty"`
 	Models            ModelsConfig  `json:"models,omitempty"`
 	Pandoc            PandocConfig  `json:"pandoc"`
 	Defaults          DefaultConfig `json:"defaults"`
@@ -188,6 +189,7 @@ func InitConfig(configPath string) (err error) {
 		AnthropicAPIKey:   "sk-ant-api03-...",
 		SummariesLocation: filepath.Join(homeDir, ".resume-tailor", "structured-summaries.json"),
 		CompleteResumeURL: "",
+		LinkedInURL:       "",
 		Pandoc: PandocConfig{
 			TemplatePath: filepath.Join(homeDir, ".resume-tailor", "resume-template.latex"),
 			ClassFile:    filepath.Join(homeDir, ".resume-tailor", "resume.cls"),

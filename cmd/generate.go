@@ -128,7 +128,7 @@ func runGenerate(cmd *cobra.Command, args []string) (err error) {
 
 	// Phase 2: Generate
 	var genResp llm.GenerationResponse
-	genResp, err = runGenerationPhase(ctx, client, jobDescription, finalCompany, finalRole, coverLetterContext, ragContext, cfg.CompleteResumeURL, analysisResp.JDAnalysis, topAchievements, data)
+	genResp, err = runGenerationPhase(ctx, client, jobDescription, finalCompany, finalRole, coverLetterContext, ragContext, cfg.CompleteResumeURL, cfg.LinkedInURL, analysisResp.JDAnalysis, topAchievements, data)
 	if err != nil {
 		return err
 	}
@@ -202,8 +202,8 @@ func runAnalysisPhase(ctx context.Context, client *llm.Client, jobDescription st
 	return analysisResp, err
 }
 
-func runGenerationPhase(ctx context.Context, client *llm.Client, jobDescription, company, role, context, ragContext, completeResumeURL string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genResp llm.GenerationResponse, err error) {
-	genReq := buildGenerationRequest(jobDescription, company, role, context, ragContext, completeResumeURL, analysis, achievements, data)
+func runGenerationPhase(ctx context.Context, client *llm.Client, jobDescription, company, role, context, ragContext, completeResumeURL, linkedInURL string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genResp llm.GenerationResponse, err error) {
+	genReq := buildGenerationRequest(jobDescription, company, role, context, ragContext, completeResumeURL, linkedInURL, analysis, achievements, data)
 
 	// Show spinner during generation unless in verbose mode
 	var genSpinner *spinner
@@ -250,7 +250,7 @@ func writeMarkdownFiles(resume, coverLetter, resumeMD, coverMD string) (err erro
 	return err
 }
 
-func buildGenerationRequest(jobDescription, company, role, context, ragContext, completeResumeURL string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genReq llm.GenerationRequest) {
+func buildGenerationRequest(jobDescription, company, role, context, ragContext, completeResumeURL, linkedInURL string, analysis llm.JDAnalysis, achievements []map[string]interface{}, data summaries.Data) (genReq llm.GenerationRequest) {
 	genReq = llm.GenerationRequest{
 		JobDescription:     jobDescription,
 		Company:            company,
@@ -260,6 +260,7 @@ func buildGenerationRequest(jobDescription, company, role, context, ragContext, 
 		CoverLetterContext: context,
 		RAGContext:         ragContext,
 		CompleteResumeURL:  completeResumeURL,
+		LinkedInURL:        linkedInURL,
 		Achievements:       achievements,
 		Profile:            profileToMap(data.Profile),
 		Skills:             skillsToMap(data.Skills),
