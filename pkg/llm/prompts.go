@@ -237,6 +237,61 @@ Each company-role-date combination is unique and must not be mixed with other co
     - If achievement says "Led DevOps team supporting X" you can say "provided infrastructure for X" but NOT "built X" or "designed X" or "X expert"
     - "Managed infrastructure team" ≠ "Engineering Manager" if actual title was "Principal Engineer" or "Head of Infrastructure"
     You can describe the ACTIVITY (e.g., "led technical initiatives", "coordinated multi-team efforts", "built team from ground up") but DO NOT fabricate role titles that weren't held.
+
+**CRITICAL - ROLE TITLES ARE SACRED - READ THIS IMMEDIATELY:**
+ROLE TITLES MUST BE COPIED EXACTLY FROM SOURCE DATA. NEVER modify, upgrade, enhance, or generalize role titles. This is resume fraud.
+
+FORBIDDEN MODIFICATIONS (will cause IMMEDIATE REJECTION):
+- "Sr. DevOps/SRE" → "Director of DevOps" ❌ FRAUD
+- "Systems Development Engineer" → "Principal Platform Engineer" ❌ FRAUD
+- "Lead DevOps Engineer" → "Engineering Manager" ❌ FRAUD
+- "Principal Engineer" → "VP of Engineering" ❌ FRAUD
+
+MANDATORY: Copy role titles VERBATIM from achievement data:
+- If source says "Sr. DevOps/SRE", write "Sr. DevOps/SRE" ✓
+- If source says "Systems Development Engineer", write "Systems Development Engineer" ✓
+- If source says "Lead DevOps Engineer", write "Lead DevOps Engineer" ✓
+
+NO EXCEPTIONS. Role title fabrication is career-ending fraud. Use EXACT text from source.
+
+**CRITICAL - ACHIEVEMENT TRACEABILITY - EVERY BULLET MUST TRACE TO SOURCE:**
+EVERY bullet point in the Experience section MUST be derived from a SPECIFIC source achievement. NEVER create generic bullets.
+
+FORBIDDEN GENERIC ACHIEVEMENTS (will cause IMMEDIATE REJECTION):
+- "Led platform engineering initiatives for enterprise cloud infrastructure" ❌ (vague, untraceable)
+- "Designed and implemented enterprise-grade solutions" ❌ (generic, untraceable)
+- "Drove DevOps transformation initiatives" ❌ (buzzwords, untraceable)
+- "Implemented infrastructure automation and deployment pipeline improvements" ❌ (generic, untraceable)
+
+MANDATORY SPECIFIC ACHIEVEMENTS (traceable to source):
+- "Automated FedRamp compliance processes achieving 100%% automation of compliance checks" ✓ (traces to aws-fedramp achievement)
+- "Built federated observability platform processing 2M+ WAF security events daily across 7 clusters" ✓ (traces to terrace-federated-observability)
+- "Managed command and control architecture for 30,000 servers supporting Apple Pay China launch" ✓ (traces to apple-pay-china-launch)
+
+RULE: If you cannot identify the specific source achievement ID for a bullet, DO NOT write that bullet.
+RULE: Generic bullets like "Led initiatives" or "Drove improvements" without specific metrics/technologies/systems are FABRICATION.
+RULE: Every bullet must include specific technologies, specific metrics, or specific systems from source achievement.
+
+**CRITICAL - POOR FIT HANDLING - WHEN CANDIDATE LACKS REQUIRED EXPERIENCE:**
+If the JD requires experience the candidate DOES NOT have, you have THREE options:
+1. OMIT - Do not mention that requirement at all
+2. REFRAME - Show transferable skills without claiming the exact experience
+3. ACKNOWLEDGE - In cover letter, acknowledge gap and emphasize transferability
+
+NEVER FABRICATE to hide gaps.
+
+Examples of POOR FIT scenarios:
+- JD wants "P&L management" but candidate has no P&L experience → OMIT or reframe as "budget optimization"
+- JD wants "Integration Architect" but candidate has no integration architecture experience → REFRAME as "platform engineer with distributed systems expertise"
+- JD wants "10+ direct reports" but candidate has no management experience → OMIT or reframe as "technical leadership"
+
+FORBIDDEN FABRICATIONS to hide gaps:
+- Adding P&L management when source only shows cost optimization ❌
+- Claiming "Integration Architect" expertise not in source ❌
+- Inventing management experience not in source ❌
+
+If there's poor fit between candidate and JD, create honest resume showing actual strengths. DO NOT fabricate missing qualifications.
+
 - CRITICAL SPECIFIC TOOL NAMES: NEVER claim experience with specific product/service names unless they are EXPLICITLY mentioned in the source data. This especially applies to: AWS security services (GuardDuty, AWS Config, Inspector, Security Hub, Macie, Detective, etc.), commercial security tools (Wiz, Snyk, Aqua, Prisma Cloud, Lacework, etc.), monitoring tools (DataDog, New Relic, Splunk, etc.). If the JD mentions "GuardDuty" but it's not in the achievements/skills, DO NOT include it. Use generic descriptions instead: "AWS security services", "cloud security posture management", "vulnerability scanning tools", "commercial observability platforms". You can claim experience with tool CATEGORIES if the candidate has used tools in that category, but NEVER claim specific tool names that aren't in source data.
 - CRITICAL WEAK QUANTIFICATIONS: Numbers under 10-20 are generally not impressive and should be omitted or replaced with qualitative descriptions. Apply this rule universally across ALL types of metrics:
   * Team sizes: "0 to 5 engineers" → omit or "built security team from ground up"
