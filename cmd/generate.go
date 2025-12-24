@@ -1027,19 +1027,7 @@ func runHybridEvaluationAndFix(ctx context.Context, cfg config.Config, company, 
 	fmt.Printf("Found %d violations, applying automated fixes...\n", totalViolations)
 
 	if getVerbose() {
-		fmt.Println("\nViolations detected:")
-		for i, v := range evalResp.ResumeViolations {
-			fmt.Printf("  [Resume %d] %s (severity: %s)\n", i+1, v.Rule, v.Severity)
-			fmt.Printf("    Fabricated: %s\n", v.Fabricated)
-			if v.SuggestedFix != "" {
-				fmt.Printf("    Suggested fix: %s\n", v.SuggestedFix)
-			}
-		}
-		for i, v := range evalResp.CoverLetterViolations {
-			fmt.Printf("  [Cover %d] %s (severity: %s)\n", i+1, v.Rule, v.Severity)
-			fmt.Printf("    Fabricated: %s\n", v.Fabricated)
-		}
-		fmt.Println()
+		displayViolations("Violations detected", evalResp.ResumeViolations, evalResp.CoverLetterViolations)
 	}
 
 	// Apply and write fixes
@@ -1056,22 +1044,8 @@ func runHybridEvaluationAndFix(ctx context.Context, cfg config.Config, company, 
 		return finalEval, err
 	}
 
-	// Check if any violations remain
-	remainingViolations := len(finalEval.ResumeViolations) + len(finalEval.CoverLetterViolations)
-	if remainingViolations == 0 {
-		fmt.Println("✓ All violations fixed! Content ready for PDF generation.")
-	} else {
-		fmt.Printf("⚠ Warning: %d violations remain after automated fixes\n", remainingViolations)
-		if getVerbose() {
-			fmt.Println("\nRemaining violations:")
-			for i, v := range finalEval.ResumeViolations {
-				fmt.Printf("  [Resume %d] %s: %s\n", i+1, v.Rule, v.Fabricated)
-			}
-			for i, v := range finalEval.CoverLetterViolations {
-				fmt.Printf("  [Cover %d] %s: %s\n", i+1, v.Rule, v.Fabricated)
-			}
-		}
-	}
+	// Display remaining violations after filtering false positives
+	displayRemainingViolations(finalEval)
 
 	return finalEval, err
 }
@@ -1248,4 +1222,55 @@ func renderPDFs(resumeMD, resumePDF, coverMD, coverPDF, templatePath, classPath 
 	os.Stdout.Sync()
 
 	return err
+}
+
+// filterRealViolations filters out false positives where the evaluator indicates it's not actually a violation.
+func filterRealViolations(violations []rag.Violation) (filtered []rag.Violation) {
+	filtered = make([]rag.Violation, 0)
+	for _, v := range violations {
+		// Skip violations where the suggested fix indicates it's not really a violation
+		suggestedLower := strings.ToLower(v.SuggestedFix)
+		if strings.Contains(suggestedLower, "not a violation") ||
+			strings.Contains(suggestedLower, "actually verified") ||
+			strings.Contains(suggestedLower, "false positive") {
+			continue
+		}
+		filtered = append(filtered, v)
+	}
+	return filtered
+}
+
+// displayViolations displays a list of violations.
+func displayViolations(title string, resumeViolations, coverViolations []rag.Violation) {
+	fmt.Printf("\n%s:\n", title)
+	for i, v := range resumeViolations {
+		fmt.Printf("  [Resume %d] %s (severity: %s)\n", i+1, v.Rule, v.Severity)
+		fmt.Printf("    Fabricated: %s\n", v.Fabricated)
+		if v.SuggestedFix != "" {
+			fmt.Printf("    Suggested fix: %s\n", v.SuggestedFix)
+		}
+	}
+	for i, v := range coverViolations {
+		fmt.Printf("  [Cover %d] %s (severity: %s)\n", i+1, v.Rule, v.Severity)
+		fmt.Printf("    Fabricated: %s\n", v.Fabricated)
+		if v.SuggestedFix != "" {
+			fmt.Printf("    Suggested fix: %s\n", v.SuggestedFix)
+		}
+	}
+	fmt.Println()
+}
+
+// displayRemainingViolations checks and displays any remaining violations after fixes.
+func displayRemainingViolations(evalResp llm.EvaluationResponse) {
+	realResumeViolations := filterRealViolations(evalResp.ResumeViolations)
+	realCoverViolations := filterRealViolations(evalResp.CoverLetterViolations)
+	remainingViolations := len(realResumeViolations) + len(realCoverViolations)
+
+	if remainingViolations == 0 {
+		fmt.Println("✓ All violations fixed! Content ready for PDF generation.")
+		return
+	}
+
+	fmt.Printf("⚠ Warning: %d violations remain after automated fixes\n", remainingViolations)
+	displayViolations("Remaining violations", realResumeViolations, realCoverViolations)
 }
