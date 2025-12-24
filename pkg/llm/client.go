@@ -192,11 +192,38 @@ func (c *Client) sendRequest(ctx context.Context, prompt string) (responseText s
 	return responseText, err
 }
 
-// stripMarkdownCodeFences removes markdown code fences from JSON responses.
+// stripMarkdownCodeFences removes markdown code fences and prefatory commentary from JSON responses.
 func stripMarkdownCodeFences(text string) (cleaned string) {
 	cleaned = text
 
-	// Check if text starts with ```json and ends with ```
+	// First, strip prefatory commentary by finding the first '{' or '```json'
+	// This handles Claude adding explanatory text before the actual JSON response
+	jsonStart := -1
+	codeBlockStart := -1
+
+	// Look for code block start
+	if idx := findSubstring(cleaned, "```json"); idx >= 0 {
+		codeBlockStart = idx
+	}
+
+	// Look for JSON object start
+	for i, char := range cleaned {
+		if char == '{' {
+			jsonStart = i
+			break
+		}
+	}
+
+	// Determine what to strip based on what we found
+	if codeBlockStart >= 0 {
+		// Code block found - strip everything before it
+		cleaned = cleaned[codeBlockStart:]
+	} else if jsonStart > 0 {
+		// No code block, but JSON found - strip everything before the '{'
+		cleaned = cleaned[jsonStart:]
+	}
+
+	// Second, handle markdown code fences (```json ... ```)
 	if len(cleaned) > 7 && cleaned[:7] == "```json" {
 		// Find first newline after ```json
 		start := 7
@@ -220,4 +247,21 @@ func stripMarkdownCodeFences(text string) (cleaned string) {
 	}
 
 	return cleaned
+}
+
+// findSubstring returns the index of substr in s, or -1 if not found.
+func findSubstring(s, substr string) (index int) {
+	index = -1
+	if len(substr) > len(s) {
+		return index
+	}
+
+	for i := 0; i <= len(s)-len(substr); i++ {
+		if s[i:i+len(substr)] == substr {
+			index = i
+			return index
+		}
+	}
+
+	return index
 }

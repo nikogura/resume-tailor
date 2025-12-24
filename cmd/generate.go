@@ -363,8 +363,8 @@ func extractCompanyAndRole(company, role string, analysis llm.JDAnalysis) (final
 		}
 	}
 
-	// Prompt for company if still empty
-	if finalCompany == "" {
+	// Prompt for company if still empty or if extraction failed
+	if finalCompany == "" || isExtractionFailureMessage(finalCompany) {
 		finalCompany = promptForInput("Company name")
 	}
 
@@ -376,8 +376,8 @@ func extractCompanyAndRole(company, role string, analysis llm.JDAnalysis) (final
 		}
 	}
 
-	// Prompt for role if still empty
-	if finalRole == "" {
+	// Prompt for role if still empty or if extraction failed
+	if finalRole == "" || isExtractionFailureMessage(finalRole) {
 		finalRole = promptForInput("Role title")
 	}
 
@@ -394,6 +394,33 @@ func promptForInput(fieldName string) (input string) {
 	}
 
 	return input
+}
+
+// isExtractionFailureMessage detects when Claude returned a message indicating extraction failed.
+func isExtractionFailureMessage(value string) (isFailure bool) {
+	lowerValue := strings.ToLower(value)
+	failureIndicators := []string{
+		"not specified",
+		"not found",
+		"not provided",
+		"not available",
+		"not mentioned",
+		"unknown",
+		"n/a",
+		"generic",
+		"unclear",
+		"could not be determined",
+	}
+
+	for _, indicator := range failureIndicators {
+		if strings.Contains(lowerValue, indicator) {
+			isFailure = true
+			return isFailure
+		}
+	}
+
+	isFailure = false
+	return isFailure
 }
 
 // spinner provides a simple text-based progress indicator.

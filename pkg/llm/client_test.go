@@ -352,6 +352,21 @@ func TestStripMarkdownCodeFences(t *testing.T) {
 			input:    "This is plain text",
 			expected: "This is plain text",
 		},
+		{
+			name:     "with prefatory commentary",
+			input:    "Looking at this role, I can see they need expertise in distributed systems.\n\n{\"test\": \"value\"}",
+			expected: "{\"test\": \"value\"}",
+		},
+		{
+			name:     "with commentary and code fence",
+			input:    "Let me analyze this job description.\n\n```json\n{\"test\": \"value\"}\n```",
+			expected: "{\"test\": \"value\"}",
+		},
+		{
+			name:     "commentary before json in real scenario",
+			input:    "Looking at this Avalara Senior Director, Engineering role, I can see they need a senior engineering leader.\n\n```json\n{\"resume\": \"test\", \"cover_letter\": \"test\"}\n```",
+			expected: "{\"resume\": \"test\", \"cover_letter\": \"test\"}",
+		},
 	}
 
 	for _, tt := range tests {
